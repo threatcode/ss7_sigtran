@@ -1,0 +1,34 @@
+#!/bin/bash
+
+pushd /stgw
+
+#BINARY="sleep 10"
+BINARY="./stgw"
+ALLOCATOR="/usr/lib64/libtcmalloc_minimal.so"
+#ALLOCATOR="/usr/lib64/libjemalloc.so"
+maxcnt=100
+trap "killall -INT stgw; exit" SIGINT
+trap "killall -INT stgw; exit" SIGHUP
+#count=1; while [ $count -lt $maxcnt ]; do ${BINARY} 2>&1 | tee run-${count}.log; count=$((count+1)); echo "Quit on `date`" >> lastquit.log; sleep 3; done
+#count=1; while [ $count -lt $maxcnt ]; do ${BINARY} 2>&1 | tee run-${count}.log; count=$((count+1)); echo "Quit on `date`" >> lastquit.log; sleep 3; done
+BINDIP=`grep '^gw_ip' sigtran.cfg | awk 'BEGIN { FS = "="; } { print $2; }' | sed -e 's/ //g'`
+count=1
+ipcount=1
+ipcountmax=5
+while true; do
+  # if the server doesn't have the IP, just quit
+  /bin/ip addr show | grep "$BINDIP"
+  if [ $? -ne 0 ]; then
+    echo "IP ${BINDIP} not active on this machine."
+    ipcount=$((ipcount+1))
+    if [ $ipcount -gt $ipcountmax ]; then
+      break
+    fi
+  fi
+  ${BINARY} 2>&1 | tee run-${count}.log
+  count=$((count+1))
+  echo "Quit on `date`" >> lastquit.log
+  sleep 3
+done
+
+popd

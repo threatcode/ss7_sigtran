@@ -1,0 +1,83 @@
+/*
+ * defs.h
+ */
+#ifndef _DEFS_H_
+#define _DEFS_H_
+
+#include <sys/types.h>
+#include <inttypes.h>
+
+typedef uint8_t octet;
+
+
+
+//#define SIGTRAN_MTU	272 // 272 was exceeding when the text was big
+#define SIGTRAN_MTU	512
+
+#define CRITICAL(format, ...) fprintf(stderr, "[%-20s:%4d] %-30s: " format, __FILE__, __LINE__, __func__, ##__VA_ARGS__)
+
+#ifdef DEBUG
+#define FTRACE() fprintf(stderr, "[%-20s:%4d] %-30s\n", __FILE__, __LINE__, __func__)
+#define DTRACE(format, ...) fprintf(stderr, "[%-20s:%4d] %-30s: " format, __FILE__, __LINE__, __func__, ##__VA_ARGS__)
+#else
+#define FTRACE()
+#define DTRACE(format, ...)
+#endif
+
+/* optional trace flag
+ * willl be enabled upon getting a SIGHUP signal
+ */
+
+#define ASN_FREE(type, ptr, no_free_ptr) (type).free_struct(&(type), ptr, no_free_ptr)
+// free the data including the pointer
+#define ASN_FREE_PTR(type, ptr) ASN_FREE(type, ptr, 0)
+// free only the data, but leave the pointer
+#define ASN_FREE_DATA(type, ptr) ASN_FREE(type, ptr, 1)
+
+#define ASN_FREE_INTEGER(ptr) if ((ptr)->buf) FREEMEM((ptr)->buf)
+
+#define TOSTR(s) #s
+#define LEN(S) (sizeof(s)-1)
+#define LENSTR(s) TOSTR(LEN(s)-1)
+
+
+#define NUL     '\0'
+#define CRLF    "\r\n"
+#define COLON   ":"
+#define SPACE   " "
+#define RS      "?"
+#define FS      "&"
+
+#define DEF_MAX(a, b) (a) > (b)? (a) : (b)
+#define DEF_MIN(a, b) (a) < (b)? (a) : (b)
+
+#define ERROR 1
+#define __K__ 0
+
+#define CHECKDIGIT(x) (((x) >= '0' && (x) <= '9') ? __K__ : ERROR)
+#define CHECKXCHAR(x) ((((x) >= 'A' && (x) <= 'F') || ((x) >= 'a' && (x) <= 'f')) ? __K__ : ERROR)
+/* 'x' must not have side effects */
+#define HEXCHARVAL(x) (((x) >= '0' && (x) <= '9') ? ((x) - '0') : (((x) >= 'A' && (x) <= 'F') ? ((x) - 'A' +10) : (((x) >= 'a' && (x) <= 'f') ? ((x) - 'a' + 10) : ((x)))))
+
+#define TOUPPER(c) (((c)>='a' && (c) <='z')?(c)-(' '):(c))
+#define TOLOWER(c) (((c)>='A' && (c) <='Z')?(c)+(' '):(c))
+
+#define STRTOUPPER(str,len) do {				\
+  register int i;						\
+  for (i = 0; i < len; ++i) {					\
+    *((str)+i) = TOUPPER(*((str)+i));				\
+  }								\
+} while (0)
+
+#define STRTOLOWER(str,len) do {				\
+  register int i;						\
+  for (i = 0; i < len; ++i) {					\
+    *((str)+i) = TOLOWER(*((str)+i));				\
+  }								\
+} while (0)
+
+/* debug memory allocations */
+#include "mymdebug.h"
+
+
+#endif /* !_DEFS_H_ */

@@ -1,0 +1,347 @@
+/*
+ * sigtran_http_resp_func.c
+ * this function is required by mod_http to give output
+ */
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include "defs.h"
+
+#include "sigtran_tcap.h"
+#include "map-dialog-mgmt.h"
+#include "map-utils.h"
+
+char *mystrncpy(char *dest, size_t destlen, const char *src, size_t *nextpos)
+{
+  size_t i = 0;
+  size_t srclen = strlen(src);
+  size_t n = DEF_MIN(destlen, srclen);
+  if (nextpos) *nextpos = 0;
+
+  for (i = 0 ; i < n && src[i] != '\0' ; ++i) {
+    dest[i] = src[i];
+  }
+
+  if (i >= destlen) --i; /* sacrifice the last char for the sake of NUL byte */
+  dest[i] = '\0';
+  if (nextpos) *nextpos = i;
+
+  return dest;
+}
+
+int extract_tokens(const char *query_string, char *msisdn, size_t msisdn_len, char *text, size_t text_len, uint8_t *notify_only)
+{
+  const char *pqstr = NULL;
+  const char *nqstr = NULL;
+  char *pstr = NULL;
+  char *qstr = NULL;
+  int delim = '&';
+  int assign = '=';
+  int done = 0;
+  char tmpbuf[256];
+  char key[16];
+  char flow[8];
+  int found = 0; /* found should be 3 to be successful */
+  size_t nextpos = 0;
+  char *decoded = NULL;
+
+  pqstr = query_string;
+
+  while (!done && ((nqstr = strchr(pqstr, delim)) || (nqstr = strchr(pqstr, '\0')))) {
+    memcpy(tmpbuf, pqstr, (nqstr-pqstr));
+    tmpbuf[nqstr-pqstr] = '\0';
+
+    pstr = tmpbuf;
+    if ((qstr = strchr(tmpbuf, assign))) {
+      memcpy(key, pstr, (qstr-pstr));
+      key[qstr-pstr] = '\0';
+
+      switch (key[0]) {
+	case 'm': /* maybe msisdn */
+	  //DTRACE("maybe msisdn [%s]\n", pqstr);
+	  if (strcmp(key, "msisdn") == 0) {
+	    pstr = qstr + 1; /* go past the equal sign */
+	    qstr = strchr(pstr, '\0');
+	    if (qstr) {
+	      mystrncpy(msisdn, msisdn_len, pstr, &nextpos);
+	      if (nextpos > 0) found++;
+	    }
+	  }
+	  break;
+	case 't': /* maybe text */
+	  //DTRACE("maybe text [%s]\n", pqstr);
+	  if (strcmp(key, "text") == 0) {
+	    pstr = qstr + 1; /* go past the equal sign */
+	    qstr = strchr(pstr, '\0');
+	    if (qstr) {
+	      decoded = rawurldecode(pstr, (qstr-pstr), &nextpos); /* include the NUL byte */
+	      if (decoded) {
+		mystrncpy(text, text_len, decoded, &nextpos);
+		if (nextpos > 0) found++;
+		MYFREE(decoded);
+	      }
+	    }
+	  }
+	  break;
+	case 'f': /* maybe text */
+	  //DTRACE("maybe flow [%s]\n", pqstr);
+	  if (strcmp(key, "flow") == 0) {
+	    pstr = qstr + 1; /* go past the equal sign */
+	    qstr = strchr(pstr, '\0');
+	    if (qstr) {
+	      mystrncpy(flow, sizeof(flow), pstr, &nextpos);
+	      if (nextpos > 0) {
+		found++;
+		if (strcmp(flow, "begin") == 0) *notify_only = 0;
+		else *notify_only = 1;
+	      }
+	    }
+	  }
+	  break;
+	default:
+	  break;
+      }
+    }
+
+    if (found == 3) done = 1;
+    if (*nqstr == '\0') done = 1;
+
+    pqstr = nqstr + 1; /* iterate to find next token */
+  }
+
+  if (found == 3) return 0;
+
+  return -1;
+}
+
+/* lookup a tcap session, if 'begin' then it allocates a new one */
+tcap_session_t *sigtran_http_new_tid(sigtran_t *st)
+{
+  FTRACE();
+  uint16_t dialogue_id = 0;
+  uint16_t map_id = 0;
+  int ret = -1;
+  tcap_session_t *tcsess = NULL;
+
+  //tcsess = sinfo->tcsess;
+  DTRACE("Session Begins by Application\n");
+  /*
+  tcsess = MYCALLOC(1, sizeof(tcap_session_t));
+  if (!tcsess) {
+    ret = -1;
+    goto err;
+  }
+  */
+
+
+  //map_id = 0; /* for simplicity */
+  map_id = st->tcap.nextid++ % st->tcap.nmaps; /* no probelm if called by multiple threads, any value will work */
+  ret = map_set_next_dialogue(st->tcap.map, map_id, (iarray_val_t *) &tcsess, &dialogue_id);
+  if (ret == -1) {
+    goto err;
+  }
+
+  tcsess->start_time = tcsess->heartbeat = time(NULL);
+  tcsess->ugw_tid = get_tid(map_id, dialogue_id);
+  tcsess->momt = MOMT_MT;
+  strcpy(tcsess->momt_desc, "mt");
+  tcsess->flow = TCMessage_PR_begin;
+  strcpy(tcsess->flow_desc, "begin");
+  tcsess->dialog_pdu_needed = 1; /* map_open needed to be built */
+
+  DTRACE("UGW TID: %u\n", tcsess->ugw_tid);
+  DTRACE("MAP STACK ID: %hu\n", map_id);
+  DTRACE("MAP DIALOG ID: %hu\n", dialogue_id);
+
+  ret = 1;
+
+err:
+  return tcsess;
+}
+
+/* flow always 'begin' */
+int tcap_msg_begin_mt(sigtran_t *st, tcap_session_t *tcsess, const char *msg, const char *msisdn, uint8_t notify_only)
+{
+  int ret = -1;
+
+  int flow = TCMessage_PR_begin;
+
+  octet tcbuf[SIGTRAN_MTU] = { 0 };
+  uint32_t tcbuflen = 0;
+  uint32_t nextpos = 0;
+  ssize_t nw = 0;
+
+  ComponentPortion_t *cp = NULL;
+  ExternalPDU_t *ext = NULL;
+  Component_t *comp = NULL;
+  TCMessage_t *tcm = NULL;
+  asn_enc_rval_t er = { 0 };  /* Encoder return value */
+
+  tcm = MYCALLOC(1, sizeof(*tcm));
+
+  tcsess->invokeid = -128;
+  if (msisdn) {
+    strcpy(tcsess->msisdn, msisdn);
+    tcsess->msisdn_len = strlen(msisdn);
+  }
+
+  tcm->present = TCMessage_PR_begin; /* For USSD MT Dialogue */
+  OCTET_STRING_fromBuf(&tcm->choice.begin.otid,
+      (const char *) &tcsess->ugw_tid, sizeof(tcsess->ugw_tid));
+
+
+  ext = ussd_dialogue_request_build(msisdn, st->hlr_gt); /* destref = msisdn, origref = hlr_gt */
+  tcm->choice.begin.dialoguePortion = ext;
+  tcsess->dialog_pdu_needed = 0; /* dialogue pdu not needed anymore after this first one */
+
+  /* add SEQUENCE_OF invoke component */
+  cp = MYCALLOC(1, sizeof(*cp));
+  tcm->choice.begin.components = cp;
+  comp = ussd_session_comp_build(tcsess, msg, msisdn, flow, notify_only);
+  ASN_SEQUENCE_ADD(&cp->list, comp);
+  cp->list.free = ussd_session_comp_free;
+
+  //xer_fprint(stdout, &asn_DEF_TCMessage, tcm);
+
+  er = der_encode_to_buffer(&asn_DEF_TCMessage, tcm, tcbuf, sizeof(tcbuf));
+  if (er.encoded > 0) {
+    tcbuflen = er.encoded;
+    //DTRACE("Encoded successfully, %ld bytes\n", er.encoded);
+    //sccp_dump_udt(sinfo->udt);
+    //hexdump(sinfo->udt->data, sinfo->udt->data_len);
+  } else {
+    ret = -1;
+    DTRACE("Failed to encode TCAP Data\n");
+    goto end;
+  }
+  //ussd_session_comp_free(comp);
+  /* free allocations */
+  //if (cp) MYFREE(cp);
+
+  /* TCAP packet ready, now build the lower levels (m3ua and sccp) */
+  sccp_data_udt_t *udt = sccp_build_udt(st->hlr_ssn, st->hlr_gt,
+      st->ugw_ssn, st->ugw_gt, tcbuf, tcbuflen);
+
+  octet *udtbuf = sccp_udt2octet(udt, &nextpos);
+  sccp_udt_free(udt);
+  if (udtbuf && nextpos > 0) {
+    m3ua_protocol_data_t *pdata = MYCALLOC(1, sizeof(*pdata));
+    pdata->opc = st->ugw_pc;
+    pdata->dpc = st->msc_pc;
+    pdata->si = 0x03; /* SCCP (3) */
+    pdata->ni = 0x02; /* National Network (2) */
+    pdata->mp = 0x00; /* Message Priority */
+    pdata->sls = 0x0f; /* Signaling Link Selection */
+    memcpy(pdata->data, udtbuf, nextpos);
+    pdata->datalen = nextpos;
+    MYFREE(udtbuf);
+
+    nextpos = 0;
+    octet *pdatabuf = m3ua_pdata2octet(pdata, &nextpos);
+    MYFREE(pdata);
+
+    if (pdatabuf && nextpos > 0) {
+      mytlv_t *tlv = mytlv_build(0x0210, pdatabuf, nextpos);
+      m3ua_t *m3ua = m3ua_build(0x01, 0x01, NULL); /* mclass=transfer messages, mtype=payload data */
+      m3ua_add_tlv(m3ua, tlv);
+      nextpos = 0;
+
+      octet *m3uabuf = m3ua2octet(m3ua, &nextpos);
+      DTRACE("%u bytes m3ua packet created\n", nextpos);
+      m3ua_free(m3ua);
+      MYFREE(pdatabuf);
+
+      if (m3uabuf && nextpos > 0) {
+	if ((nw = sctp_sendmsg(st->fd, m3uabuf, nextpos, (struct sockaddr *) &st->servaddr, st->addrlen, st->ppid, 0, st->data_str_no, 0, 0)) != nextpos) {
+	  CRITICAL("*** Less data written to socket, attempted %u bytes, written %ld bytes\n", nextpos, nw);
+	  ret = -1;
+	}
+	MYFREE(m3uabuf);
+      }
+    }
+  }
+
+  ret = 1;
+
+end:
+
+  ASN_FREE_DATA(asn_DEF_OCTET_STRING, &tcm->choice.begin.otid);
+
+  asn_set_empty(&cp->list); /* this will call the free function set (ussd_session_comp_free) */
+  MYFREE(cp);
+
+  ussd_dialogue_request_free(ext);
+  if (tcm) MYFREE(tcm);
+
+  return ret;
+}
+
+
+size_t sigtran_tcap_stat_dump(sigtran_t *st, char *buf, size_t buflen)
+{
+  FTRACE();
+
+  if (!st || !st->tcap.map) {
+    return snprintf(buf, buflen, "Error getting statistics, please try later.\n");
+  }
+
+  map_t *map = st->tcap.map;
+  uint16_t n = 0;
+  uint16_t nmaps = st->tcap.nmaps;
+  uint16_t i = 0;
+  uint32_t ndialogs = 0;
+
+  for (i = 0; i < nmaps; ++i) {
+    ndialogs += map_get_dialogue_count(map, n);
+  }
+
+  memset(buf, 0, buflen);
+  return snprintf(buf, buflen-1, "%u dialogues allocated in %u MAP License\n", ndialogs, nmaps);
+}
+
+size_t sigtran_http_resp_func(void *sys, const char *request_path, const char *query_string, char *buf, size_t buflen)
+{
+  FTRACE();
+  size_t nr = 0;
+  const char *err_resp = "ERROR";
+  const char *err_resp_msg = "ERROR [LONGTXT]";
+  char msisdn[20];
+  char text[256];
+#define MAX_MT_CHARS 175		/* 154 octets = 176 chars (7 bit) */
+  uint8_t notify_only = 1; /* default to notify, otherwise request */
+  tcap_session_t *tcsess = NULL;
+  sigtran_t *st = ((system_t *) (sys))->sigtran;
+
+//  mystrncpy(buf, buflen, err_resp, &nr);
+
+  if (strcmp(request_path, "/count") == 0) { /* show statistics */
+    nr = sigtran_tcap_stat_dump(st, buf, buflen);
+    return nr;
+  }
+
+  if (extract_tokens(query_string, msisdn, sizeof(msisdn), text, sizeof(text), &notify_only) < 0) {
+    mystrncpy(buf, buflen, err_resp, &nr);
+  } else {
+    if (strlen(text) > MAX_MT_CHARS) { /* 154 octets = 176 chars (7 bit) */
+      mystrncpy(buf, buflen, err_resp_msg, &nr);
+    } else {
+      tcsess = sigtran_http_new_tid(st);
+      if (tcsess) {
+	//nr = snprintf(buf, buflen, "msisdn=%s,text=%s,notify_only=%u\n", msisdn, text, notify_only);
+	if (tcap_msg_begin_mt(st, tcsess, text, msisdn, notify_only) >= 0) {
+	  nr = snprintf(buf, buflen, "%u", tcsess->ugw_tid);
+	} else {
+	  mystrncpy(buf, buflen, err_resp, &nr);
+	}
+      } else {
+	mystrncpy(buf, buflen, err_resp, &nr);
+      }
+    }
+    DTRACE("Response=%s\n", buf);
+  }
+
+  /* check request path (will be done later, now trusted) */
+
+  return nr;
+}

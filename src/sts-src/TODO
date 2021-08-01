@@ -1,0 +1,1 @@
+Remove dependency of app_url and rather make own service to handle application logic.

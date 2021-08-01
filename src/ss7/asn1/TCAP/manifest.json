@@ -1,0 +1,8 @@
+{
+   "name" : "TCAP",
+   "dependencies" : [ "ROS", "MAP" ],
+   "rootModules" : [ 
+      "TCAPMessages", 
+      "TC-Notation-Extensions" ,
+      "TCAP-Tools" ] 
+}

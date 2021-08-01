@@ -1,0 +1,715 @@
+-- $Id: MAP-MobileServiceOperations.asn 34814 2010-11-08 23:15:16Z etxrab $
+-- 3GPP TS 29.002 V9.3.0 (2010-09) 
+-- 17.6.1	Mobile Service Operations
+
+MAP-MobileServiceOperations {
+   itu-t identified-organization (4) etsi (0) mobileDomain (0)
+   gsm-Network (1) modules (3) map-MobileServiceOperations (5)
+   version12 (12)}
+
+DEFINITIONS
+
+::=
+
+BEGIN
+
+EXPORTS
+
+	-- location registration operations
+	updateLocation,
+	cancelLocationV2,
+	cancelLocationV3,
+	purgeMSV2,
+	purgeMSV3,
+	sendIdentificationV2,
+	sendIdentificationV3,
+
+	-- gprs location registration operations
+	updateGprsLocation,
+
+	-- subscriber information enquiry operations
+	provideSubscriberInfo,
+
+	-- any time information enquiry operations
+	anyTimeInterrogation,
+
+	-- any time information handling operations
+	anyTimeSubscriptionInterrogation,
+	anyTimeModification, 
+
+	-- subscriber data modification notification operations
+	noteSubscriberDataModified,
+
+
+	-- handover operations
+	prepareHandoverV2,
+	prepareHandoverV3,
+	sendEndSignalV2,
+	sendEndSignalV3,
+	processAccessSignallingV2,
+	processAccessSignallingV3,
+	forwardAccessSignallingV2,
+	forwardAccessSignallingV3,
+	prepareSubsequentHandoverV2,
+	prepareSubsequentHandoverV3,
+
+	-- authentication management operations
+	sendParameters,
+	sendAuthenticationInfoV2,
+	sendAuthenticationInfoV3,
+	authenticationFailureReport,
+
+	-- IMEI management operations
+	checkIMEIV2,
+	checkIMEIV3,
+
+	-- subscriber management operations
+	insertSubscriberDataV2,
+	insertSubscriberDataV3,
+	deleteSubscriberDataV2,
+	deleteSubscriberDataV3,
+
+	-- fault recovery operations
+	reset,
+	resetV3,
+	forwardCheckSS-Indication,
+	restoreData,
+
+-- gprs location information retrieval operations
+	sendRoutingInfoForGprs,
+	
+	-- failure reporting operations
+	failureReport,
+	
+	-- gprs notification operations
+	noteMsPresentForGprs,
+
+-- Mobility Management operations
+	noteMM-Event
+
+;
+
+IMPORTS
+	OPERATION
+FROM Remote-Operations-Information-Objects {
+joint-iso-itu-t remote-operations(4)
+  informationObjects(5) version1(0)} 
+
+	systemFailure,
+	dataMissing,
+	unexpectedDataValue,
+	unknownSubscriber,
+	unknownMSC,
+	unidentifiedSubscriber,
+	unknownEquipment,
+	roamingNotAllowed, 
+	ati-NotAllowed,
+	noHandoverNumberAvailable,
+	subsequentHandoverFailure,
+	absentSubscriber,
+	mm-EventNotSupported,
+	atsi-NotAllowed,
+	atm-NotAllowed,
+	bearerServiceNotProvisioned,
+	teleserviceNotProvisioned,
+	callBarred,
+	illegalSS-Operation,
+	ss-ErrorStatus,
+	ss-NotAvailable,
+	ss-Incompatibility,
+	ss-SubscriptionViolation,
+	informationNotAvailable,
+	targetCellOutsideGroupCallArea
+
+
+FROM MAP-Errors {
+   itu-t identified-organization (4) etsi (0) mobileDomain (0)
+   gsm-Network (1) modules (3) map-Errors (10) version12 (12)}
+
+	UpdateLocationArg,
+	UpdateLocationRes,
+	CancelLocationArg,
+	CancelLocationRes, 
+	PurgeMS-ArgV2, 
+	PurgeMS-ArgV3, 
+	PurgeMS-ResV3,
+	SendIdentificationArgV2,
+	SendIdentificationArgV3,
+	SendIdentificationResV2,
+	SendIdentificationResV3,
+	UpdateGprsLocationArg,
+	UpdateGprsLocationRes,
+	PrepareHO-ArgV2,
+	PrepareHO-ArgV3,
+	PrepareHO-ResV2,
+	PrepareHO-ResV3,
+ForwardAccessSignalling-ArgV2,
+ForwardAccessSignalling-ArgV3,
+ProcessAccessSignalling-ArgV2,
+ProcessAccessSignalling-ArgV3,
+SendEndSignal-ArgV2,
+SendEndSignal-ArgV3,
+SendEndSignal-ResV3,
+PrepareSubsequentHO-ResV2,
+PrepareSubsequentHO-ResV3,
+	PrepareSubsequentHO-ArgV2,
+	PrepareSubsequentHO-ArgV3,
+	SendParametersArg,
+	SentParameterList,
+	SendAuthenticationInfoArgV2,
+	SendAuthenticationInfoArgV3,
+	SendAuthenticationInfoResV2,
+	SendAuthenticationInfoResV3,
+	AuthenticationFailureReportArg,
+	AuthenticationFailureReportRes,
+	CheckIMEI-ArgV2,
+	CheckIMEI-ArgV3,
+	CheckIMEI-ResV2,
+	CheckIMEI-ResV3,
+	InsertSubscriberDataArgV2,
+	InsertSubscriberDataArgV3,
+	InsertSubscriberDataResV2,
+	InsertSubscriberDataResV3,
+	DeleteSubscriberDataArgV2,
+	DeleteSubscriberDataArgV3,
+	DeleteSubscriberDataResV2,
+	DeleteSubscriberDataResV3,
+	ResetArg,
+	ResetArgV1,
+	ResetArgV3,
+	RestoreDataArg,
+	RestoreDataRes,
+	ProvideSubscriberInfoArg,
+	ProvideSubscriberInfoRes,
+	AnyTimeSubscriptionInterrogationArg,
+	AnyTimeSubscriptionInterrogationRes,
+	AnyTimeModificationArg,
+	AnyTimeModificationRes,
+	NoteSubscriberDataModifiedArg,
+	NoteSubscriberDataModifiedRes,
+	AnyTimeInterrogationArg,
+	AnyTimeInterrogationRes,
+	SendRoutingInfoForGprsArg,
+	SendRoutingInfoForGprsRes,
+	FailureReportArg,
+	FailureReportRes,
+	NoteMsPresentForGprsArg,
+	NoteMsPresentForGprsRes,
+	NoteMM-EventArg,
+	NoteMM-EventRes,
+	UpdateVcsgLocationArg,
+	UpdateVcsgLocationRes,
+	CancelVcsgLocationArg,
+	CancelVcsgLocationRes
+
+
+FROM MAP-MS-DataTypes {
+   itu-t identified-organization (4) etsi (0) mobileDomain (0)
+   gsm-Network (1) modules (3) map-MS-DataTypes (11) version12 (12)}
+
+;
+
+
+-- location registration operations
+
+updateLocation  OPERATION ::= {				--Timer m
+	ARGUMENT
+		UpdateLocationArg
+	RESULT
+		UpdateLocationRes
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber |
+		roamingNotAllowed}
+	CODE	local:2 }
+
+cancelLocationV2  OPERATION ::= {				--Timer m
+	ARGUMENT
+		Identity
+	ERRORS {
+		dataMissing |
+		unexpectedDataValue}
+	CODE	local:3 }
+
+cancelLocationV3  OPERATION ::= {				--Timer m
+	ARGUMENT
+		CancelLocationArg
+	RESULT
+		CancelLocationRes
+			-- optional
+	ERRORS {
+		dataMissing |
+		unexpectedDataValue}
+	CODE	local:3 }
+
+purgeMSV2  OPERATION ::= {				--Timer m
+	ARGUMENT
+		PurgeMS-ArgV2
+	ERRORS{
+		dataMissing |
+		unexpectedDataValue}
+	CODE	local:67 }
+purgeMSV3  OPERATION ::= {				--Timer m
+	ARGUMENT
+		PurgeMS-ArgV3
+	RESULT
+		PurgeMS-ResV3
+			-- optional
+	ERRORS{
+		dataMissing |
+		unexpectedDataValue|
+		unknownSubscriber}
+	CODE	local:67 }
+
+sendIdentificationV2  OPERATION ::= {				--Timer s
+	ARGUMENT
+		SendIdentificationArgV2
+	RESULT
+		SendIdentificationResV2
+	ERRORS {
+		dataMissing |
+		unidentifiedSubscriber}
+	CODE	local:55 }
+
+sendIdentificationV3  OPERATION ::= {				--Timer s
+	ARGUMENT
+		SendIdentificationArgV3
+	RESULT
+		SendIdentificationResV3
+	ERRORS {
+		dataMissing |
+		unidentifiedSubscriber}
+	CODE	local:55 }
+
+-- gprs location registration operations
+
+updateGprsLocation  OPERATION ::= {				--Timer m
+	ARGUMENT
+		UpdateGprsLocationArg
+	RESULT
+		UpdateGprsLocationRes
+	ERRORS {
+		systemFailure |
+		unexpectedDataValue |
+		unknownSubscriber |
+		roamingNotAllowed}
+	CODE	local:23 }
+
+-- subscriber information enquiry operations
+
+provideSubscriberInfo  OPERATION ::= {				--Timer m
+	ARGUMENT
+		ProvideSubscriberInfoArg
+	RESULT
+		ProvideSubscriberInfoRes
+	ERRORS {
+		dataMissing |
+		unexpectedDataValue}
+	CODE	local:70 }
+
+-- any time information enquiry operations
+
+anyTimeInterrogation  OPERATION ::= {				--Timer m
+	ARGUMENT
+		AnyTimeInterrogationArg
+	RESULT
+		AnyTimeInterrogationRes
+	ERRORS {
+		systemFailure | 
+		ati-NotAllowed |
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber}
+	CODE	local:71 }
+
+-- any time information handling operations
+
+anyTimeSubscriptionInterrogation  OPERATION ::= {			--Timer m
+	ARGUMENT
+		AnyTimeSubscriptionInterrogationArg
+	RESULT
+		AnyTimeSubscriptionInterrogationRes
+	ERRORS {
+		atsi-NotAllowed |
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber |
+		bearerServiceNotProvisioned |
+		teleserviceNotProvisioned |
+		callBarred |
+		illegalSS-Operation |
+		ss-NotAvailable |
+		informationNotAvailable}
+	CODE	local:62 }
+
+anyTimeModification  OPERATION ::= {				--Timer m
+	ARGUMENT
+		AnyTimeModificationArg
+	RESULT
+		AnyTimeModificationRes
+	ERRORS {
+		atm-NotAllowed |
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber |
+		bearerServiceNotProvisioned |
+		teleserviceNotProvisioned |
+		callBarred |
+		illegalSS-Operation |
+		ss-SubscriptionViolation |
+		ss-ErrorStatus |
+		ss-Incompatibility |
+		informationNotAvailable}
+	CODE	local:65 }
+
+-- subscriber data modification notification operations
+
+noteSubscriberDataModified  OPERATION ::= {				--Timer m
+	ARGUMENT
+		NoteSubscriberDataModifiedArg
+	RESULT
+		NoteSubscriberDataModifiedRes
+			-- optional
+	ERRORS {
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber}
+	CODE	local:5 }
+
+-- handover operations
+
+prepareHandoverV2  OPERATION ::= {				--Timer m
+	ARGUMENT
+		PrepareHO-ArgV2
+	RESULT
+		PrepareHO-ResV2
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue |
+		noHandoverNumberAvailable }
+	CODE	local:68 }
+
+prepareHandoverV3  OPERATION ::= {				--Timer m
+	ARGUMENT
+		PrepareHO-ArgV3
+	RESULT
+		PrepareHO-ResV3
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue |
+		noHandoverNumberAvailable |
+		targetCellOutsideGroupCallArea }
+	CODE	local:68 }
+
+sendEndSignalV2  OPERATION ::= {				--Timer l
+	ARGUMENT
+		SendEndSignal-ArgV2
+	CODE	local:29 }
+sendEndSignalV3  OPERATION ::= {				--Timer l
+	ARGUMENT
+		SendEndSignal-ArgV3
+	RESULT
+		SendEndSignal-ResV3
+	CODE	local:29 }
+
+processAccessSignallingV2  OPERATION ::= {				--Timer s
+	ARGUMENT
+		ProcessAccessSignalling-ArgV2
+	CODE	local:33 }
+processAccessSignallingV3  OPERATION ::= {				--Timer s
+	ARGUMENT
+		ProcessAccessSignalling-ArgV3
+	CODE	local:33 }
+
+forwardAccessSignallingV2  OPERATION ::= {				--Timer s
+	ARGUMENT
+		ForwardAccessSignalling-ArgV2
+	CODE	local:34 }
+forwardAccessSignallingV3  OPERATION ::= {				--Timer s
+	ARGUMENT
+		ForwardAccessSignalling-ArgV3
+	CODE	local:34 }
+
+prepareSubsequentHandoverV2  OPERATION ::= {				--Timer m
+	ARGUMENT
+		PrepareSubsequentHO-ArgV2
+	RESULT
+		PrepareSubsequentHO-ResV2
+	ERRORS {
+		unexpectedDataValue |
+		dataMissing |
+		unknownMSC |
+		subsequentHandoverFailure}
+	CODE	local:69 }
+prepareSubsequentHandoverV3  OPERATION ::= {				--Timer m
+	ARGUMENT
+		PrepareSubsequentHO-ArgV3
+	RESULT
+		PrepareSubsequentHO-ResV3
+	ERRORS {
+		unexpectedDataValue |
+		dataMissing |
+		unknownMSC |
+		subsequentHandoverFailure}
+	CODE	local:69 }
+
+
+-- v1 operation
+sendParameters  OPERATION ::= {				--Timer m
+	ARGUMENT
+		SendParametersArg
+		-- optional
+		-- within a dialogue sendAuthenticationInfoArg shall not be present in
+		-- subsequent invoke components. If received in a subsequent invoke component
+		-- it shall be discarded.
+
+	RESULT
+		SentParameterList
+		-- optional
+	ERRORS {
+		unexpectedDataValue |
+		unknownSubscriber |
+		unidentifiedSubscriber}
+	CODE	local:9 }
+
+-- authentication management operations
+
+sendAuthenticationInfoV2  OPERATION ::= {				--Timer m
+	ARGUMENT
+		SendAuthenticationInfoArgV2
+		-- optional
+		-- within a dialogue sendAuthenticationInfoArg shall not be present in
+		-- subsequent invoke components. If received in a subsequent invoke component
+		-- it shall be discarded.
+
+	RESULT
+		SendAuthenticationInfoResV2
+		-- optional
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber}
+	CODE	local:56 }
+
+sendAuthenticationInfoV3  OPERATION ::= {				--Timer m
+	ARGUMENT
+		SendAuthenticationInfoArgV3
+		-- optional
+		-- within a dialogue sendAuthenticationInfoArg shall not be present in
+		-- subsequent invoke components. If received in a subsequent invoke component
+		-- it shall be discarded.
+
+	RESULT
+		SendAuthenticationInfoResV3
+		-- optional
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber}
+	CODE	local:56 }
+
+authenticationFailureReport  OPERATION ::= {			--Timer m
+	ARGUMENT
+		AuthenticationFailureReportArg
+	RESULT
+		AuthenticationFailureReportRes
+		-- optional
+	ERRORS {
+		systemFailure |
+		unexpectedDataValue |
+		unknownSubscriber}
+	CODE	local:15 }
+
+-- IMEI management operations
+checkIMEIV2  OPERATION ::= {				--Timer m
+	ARGUMENT
+		CheckIMEI-ArgV2
+	RESULT
+		CheckIMEI-ResV2
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unknownEquipment}
+	CODE	local:43 }
+
+checkIMEIV3  OPERATION ::= {				--Timer m
+	ARGUMENT
+		CheckIMEI-ArgV3
+	RESULT
+		CheckIMEI-ResV3
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unknownEquipment}
+	CODE	local:43 }
+
+-- subscriber management operations
+
+insertSubscriberDataV2  OPERATION ::= {				--Timer m
+	ARGUMENT
+		InsertSubscriberDataArgV2
+	RESULT
+		InsertSubscriberDataResV2
+		-- optional
+	ERRORS {
+		dataMissing |
+		unexpectedDataValue |
+		unidentifiedSubscriber}
+	CODE	local:7 }
+
+insertSubscriberDataV3  OPERATION ::= {				--Timer m
+	ARGUMENT
+		InsertSubscriberDataArgV3
+	RESULT
+		InsertSubscriberDataResV3
+		-- optional
+	ERRORS {
+		dataMissing |
+		unexpectedDataValue |
+		unidentifiedSubscriber}
+	CODE	local:7 }
+
+deleteSubscriberDataV2  OPERATION ::= {				--Timer m
+	ARGUMENT
+		DeleteSubscriberDataArgV2
+	RESULT
+		DeleteSubscriberDataResV2
+		-- optional
+	ERRORS {
+		dataMissing |
+		unexpectedDataValue |
+		unidentifiedSubscriber}
+	CODE	local:8 }
+
+deleteSubscriberDataV3  OPERATION ::= {				--Timer m
+	ARGUMENT
+		DeleteSubscriberDataArgV3
+	RESULT
+		DeleteSubscriberDataResV3
+		-- optional
+	ERRORS {
+		dataMissing |
+		unexpectedDataValue |
+		unidentifiedSubscriber}
+	CODE	local:8 }
+
+-- fault recovery operations
+
+reset  OPERATION ::= {				--Timer m
+	ARGUMENT
+		ResetArg
+	CODE	local:37 }
+
+resetV1  OPERATION ::= {				--Timer m
+	ARGUMENT
+		ResetArgV1
+	CODE	local:37 }
+
+resetV3  OPERATION ::= {				--Timer m
+	ARGUMENT
+		ResetArgV3
+	CODE	local:37 }
+
+forwardCheckSS-Indication  OPERATION ::= {			--Timer s
+	CODE	local:38 }
+
+restoreData  OPERATION ::= {				--Timer m
+	ARGUMENT
+		RestoreDataArg
+	RESULT
+		RestoreDataRes
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber}
+	CODE	local:57 }
+
+-- gprs location information retrieval operations
+
+sendRoutingInfoForGprs  OPERATION ::= {				--Timer m
+	ARGUMENT
+		SendRoutingInfoForGprsArg
+	RESULT
+		SendRoutingInfoForGprsRes
+	ERRORS {
+		absentSubscriber |
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber |
+		callBarred }
+	CODE	local:24 }
+
+-- failure reporting operations
+
+failureReport  OPERATION ::= {				--Timer m
+	ARGUMENT
+		FailureReportArg
+	RESULT
+		FailureReportRes
+			-- optional
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber}
+	CODE	local:25 }
+
+-- gprs notification operations
+
+noteMsPresentForGprs  OPERATION ::= {				--Timer m
+	ARGUMENT
+		NoteMsPresentForGprsArg
+	RESULT
+		NoteMsPresentForGprsRes
+			-- optional
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber}
+	CODE	local:26 }
+
+noteMM-Event  OPERATION ::= {				--Timer m
+	ARGUMENT
+		NoteMM-EventArg
+	RESULT
+		NoteMM-EventRes
+	ERRORS {
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber |
+		mm-EventNotSupported}
+	CODE	local:89 }
+
+updateVcsgLocation OPERATION ::= { ARGUMENT
+         UpdateVcsgLocationArg
+     RESULT
+         UpdateVcsgLocationRes
+     ERRORS {
+         systemFailure |
+         unexpectedDataValue |
+         unknownSubscriber}
+CODE local:53 }
+
+cancelVcsgLocation OPERATION ::= {
+     ARGUMENT
+         CancelVcsgLocationArg
+     RESULT
+         CancelVcsgLocationRes
+              -- optional
+     ERRORS {
+         dataMissing |
+         unexpectedDataValue}
+     CODE local:36 }
+
+
+
+END

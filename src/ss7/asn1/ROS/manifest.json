@@ -1,0 +1,9 @@
+{
+   "name" : "ROS",
+   "dependencies" : [ ],
+   "rootModules" : [ 
+      "Remote-Operations-Generic-ROS-PDUs",
+      "Remote-Operations-Information-Objects",
+      "Remote-Operations-Useful-Definitions" 
+   ] 
+}

@@ -1,0 +1,19 @@
+; core.ini
+; core config file
+; configuration entry point of the system
+[core]
+moduledir = modules
+modules = signal event http
+
+[mod_signal]
+ignore = SIGPIPG
+quit = SIGQUIT
+reload = SIGHUP
+
+[mod_event]
+maxevents = 1000
+
+[mod_http]
+;bind_ip = 127.0.0.1
+bindto = 0.0.0.0:9999
+workers = 3

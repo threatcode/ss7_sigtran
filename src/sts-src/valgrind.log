@@ -1,0 +1,528 @@
+==26527== Memcheck, a memory error detector
+==26527== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==26527== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==26527== Command: ./stgw
+==26527== 
+Going to load module: license
+[mod_license.c       :  10] module_start                  
+[mod_license.c       :  12] module_start                  : *** License looks OK ***
+Going to load module: signal
+Going to load module: sigtran
+[mod_sigtran.c       :1129] module_start                  : ckey=<msc_ip>, cptr=<10.21.11.2>
+[mod_sigtran.c       :1129] module_start                  : ckey=<msc_port>, cptr=<3037>
+[mod_sigtran.c       :1129] module_start                  : ckey=<gw_ip>, cptr=<10.21.193.67>
+[mod_sigtran.c       :1129] module_start                  : ckey=<gw_port>, cptr=<2905>
+[mod_sigtran.c       :1129] module_start                  : ckey=<msc_pc>, cptr=<2500>
+[mod_sigtran.c       :1129] module_start                  : ckey=<gw_pc>, cptr=<2229>
+[mod_sigtran.c       :1129] module_start                  : ckey=<hlr_gt>, cptr=<880150159800>
+[mod_sigtran.c       :1129] module_start                  : ckey=<gw_gt>, cptr=<880150159936>
+[mod_sigtran.c       :1129] module_start                  : ckey=<hlr_ssn>, cptr=<6>
+[mod_sigtran.c       :1129] module_start                  : ckey=<gw_ssn>, cptr=<147>
+[mod_sigtran.c       :1129] module_start                  : ckey=<app_url>, cptr=<http://127.0.0.1/ussd/mo.php>
+[mod_sigtran.c       : 858] sigtran_tcap_init             
+[mod_sigtran.c       : 912] sigtran_m3ua_hb_init          
+[m3ua.c              : 324] m3ua_octet_ASPUP              
+[m3ua.c              :  14] m3ua_build                    
+[m3ua.c              :  41] m3ua2octet                    
+[m3ua.c              : 197] m3ua_free                     
+[utils.c             : 107] sigtran_send_ASPUP            : Sending ASPUP
+[sigtran_tcap.c      : 694] sigtran_tcap_worker           
+[sigtran_tcap.c      : 737] map_init                      
+[sigtran_tcap.c      : 760] map_init                      : Going to create 1 MAP workers
+[sigtran_tcap.c      : 702] sigtran_tcap_worker           : Waiting for data from SIGTRAN
+[sigtran_tcap.c      : 928] map_stack_start               
+[sigtran_tcap.c      : 945] map_stack_start               : Starting MAP Stack [0]
+[sigtran_tcap.c      : 952] map_stack_start               : [0] Waiting for packets from TCAP worker thread.
+Going to load module: http
+[mod_http.c          : 422] module_start                  
+Running event loop
+[mod_sigtran.c       : 778] sigtran_on_data               
+[mod_sigtran.c       : 766] sigtran_process_data          
+[mod_sigtran.c       : 537] sigtran_state_machine         
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:0 (assoc:0x0) [20 bytes]:
+[utils.c             : 145] sctp_handle_notification      : ^^^ assoc_change: state=0, error=0, instr=2 outstr=2
+[mod_sigtran.c       : 778] sigtran_on_data               
+[mod_sigtran.c       : 766] sigtran_process_data          
+[mod_sigtran.c       : 537] sigtran_state_machine         
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:0 (assoc:0xa) [8 bytes]:
+[m3ua.c              : 126] octet2m3ua                    
+[mod_sigtran.c       : 482] sigtran_state_aspsm           
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:1 (assoc:0xa) [16 bytes]:
+[m3ua.c              : 126] octet2m3ua                    
+[m3ua.c              : 188] m3ua_add_tlv                  
+[mod_sigtran.c       : 314] sigtran_state_mgmt            
+[mod_sigtran.c       : 334] sigtran_state_mgmt            : Status type: 0x1
+[mod_sigtran.c       : 335] sigtran_state_mgmt            : Status info: 0x2
+[m3ua.c              : 360] m3ua_octet_ASPAC              
+[m3ua.c              :  14] m3ua_build                    
+[m3ua.c              :  41] m3ua2octet                    
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 343] sigtran_state_mgmt            : Sending ASPAC
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 778] sigtran_on_data               
+[mod_sigtran.c       : 766] sigtran_process_data          
+[mod_sigtran.c       : 537] sigtran_state_machine         
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:2 (assoc:0xa) [16 bytes]:
+[m3ua.c              : 126] octet2m3ua                    
+[m3ua.c              : 188] m3ua_add_tlv                  
+[mod_sigtran.c       : 510] sigtran_state_asptm           
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:3 (assoc:0xa) [16 bytes]:
+[m3ua.c              : 126] octet2m3ua                    
+[m3ua.c              : 188] m3ua_add_tlv                  
+[mod_sigtran.c       : 314] sigtran_state_mgmt            
+[mod_sigtran.c       : 334] sigtran_state_mgmt            : Status type: 0x1
+[mod_sigtran.c       : 335] sigtran_state_mgmt            : Status info: 0x3
+[m3ua.c              : 396] m3ua_octet_DAVA               
+[m3ua.c              :  14] m3ua_build                    
+[m3ua.c              : 188] m3ua_add_tlv                  
+[m3ua.c              :  41] m3ua2octet                    
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 356] sigtran_state_mgmt            : Sending DAVA
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:4 (assoc:0xa) [16 bytes]:
+[m3ua.c              : 126] octet2m3ua                    
+[m3ua.c              : 188] m3ua_add_tlv                  
+[mod_sigtran.c       : 446] sigtran_state_ssnm            
+[mod_sigtran.c       : 462] sigtran_state_ssnm            : Mask: 0x0 (0)
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 778] sigtran_on_data               
+[mod_sigtran.c       : 766] sigtran_process_data          
+[mod_sigtran.c       : 537] sigtran_state_machine         
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:0 (assoc:0x0) [148 bytes]:
+[utils.c             : 170] sctp_handle_notification      : ^^^ intf_change: 10.21.11.130 state=5, error=2
+[mod_http.c          : 394] http_on_connect               
+[mod_http.c          : 352] http_on_data                  
+[mod_http.c          : 372] http_on_data                  : HTTP Session Data allocated
+[mod_http.c          : 178] http_process_data             
+[mod_http.c          : 352] http_on_data                  
+[mod_http.c          : 178] http_process_data             
+[mod_http.c          : 134] http_parse_header             
+[mod_http.c          :  30] http_request_method_cb        
+[mod_http.c          :  39] http_request_path_cb          
+[mod_http.c          :  18] http_request_uri_cb           
+[mod_http.c          : 102] http_version_cb               
+[mod_http.c          : 123] http_header_done_cb           
+[sigtran_http_resp_func.c: 442] sigtran_http_resp_func        
+[mod_sigtran.c       : 820] sigtran_m3ua_hb_ready         
+[mod_sigtran.c       : 706] sigtran_m3ua_hb_process       
+[mod_sigtran.c       : 714] sigtran_m3ua_hb_process       : *** Timer armed. Going to process.
+[mod_sigtran.c       : 723] sigtran_m3ua_hb_process       : Gateway Shutdown Requested, exiting...
+==26527== 
+==26527== HEAP SUMMARY:
+==26527==     in use at exit: 26,884 bytes in 71 blocks
+==26527==   total heap usage: 108 allocs, 37 frees, 30,836 bytes allocated
+==26527== 
+==26527== 8 bytes in 1 blocks are still reachable in loss record 1 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x9856978: sigtran_tcap_worker (sigtran_tcap.c:767)
+==26527==    by 0x629DA50: start_thread (in /lib64/libpthread-2.12.so)
+==26527==    by 0xA4636FF: ???
+==26527== 
+==26527== 8 bytes in 1 blocks are still reachable in loss record 2 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x9856989: sigtran_tcap_worker (sigtran_tcap.c:768)
+==26527==    by 0x629DA50: start_thread (in /lib64/libpthread-2.12.so)
+==26527==    by 0xA4636FF: ???
+==26527== 
+==26527== 8 bytes in 1 blocks are still reachable in loss record 3 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x98569BF: sigtran_tcap_worker (sigtran_tcap.c:771)
+==26527==    by 0x629DA50: start_thread (in /lib64/libpthread-2.12.so)
+==26527==    by 0xA4636FF: ???
+==26527== 
+==26527== 16 bytes in 1 blocks are still reachable in loss record 4 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x9854FBD: lfq_node_new (lfq.c:17)
+==26527==    by 0x9855084: lfq_new (lfq.c:32)
+==26527==    by 0x9853550: module_start (mod_sigtran.c:871)
+==26527==    by 0x40117A: ayubd_module_load (main.c:58)
+==26527==    by 0x4013A4: ayubd_config_read (main.c:20)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 16 bytes in 1 blocks are still reachable in loss record 5 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x9854FBD: lfq_node_new (lfq.c:17)
+==26527==    by 0x9855084: lfq_new (lfq.c:32)
+==26527==    by 0x985355C: module_start (mod_sigtran.c:872)
+==26527==    by 0x40117A: ayubd_module_load (main.c:58)
+==26527==    by 0x4013A4: ayubd_config_read (main.c:20)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 16 bytes in 1 blocks are still reachable in loss record 6 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x9854FBD: lfq_node_new (lfq.c:17)
+==26527==    by 0x9855084: lfq_new (lfq.c:32)
+==26527==    by 0x9853568: module_start (mod_sigtran.c:873)
+==26527==    by 0x40117A: ayubd_module_load (main.c:58)
+==26527==    by 0x4013A4: ayubd_config_read (main.c:20)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 16 bytes in 1 blocks are still reachable in loss record 7 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x9854FBD: lfq_node_new (lfq.c:17)
+==26527==    by 0x9855084: lfq_new (lfq.c:32)
+==26527==    by 0x9856A23: sigtran_tcap_worker (sigtran_tcap.c:779)
+==26527==    by 0x629DA50: start_thread (in /lib64/libpthread-2.12.so)
+==26527==    by 0xA4636FF: ???
+==26527== 
+==26527== 24 bytes in 1 blocks are still reachable in loss record 8 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x985507A: lfq_new (lfq.c:31)
+==26527==    by 0x9853550: module_start (mod_sigtran.c:871)
+==26527==    by 0x40117A: ayubd_module_load (main.c:58)
+==26527==    by 0x4013A4: ayubd_config_read (main.c:20)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 24 bytes in 1 blocks are still reachable in loss record 9 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x985507A: lfq_new (lfq.c:31)
+==26527==    by 0x985355C: module_start (mod_sigtran.c:872)
+==26527==    by 0x40117A: ayubd_module_load (main.c:58)
+==26527==    by 0x4013A4: ayubd_config_read (main.c:20)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 24 bytes in 1 blocks are still reachable in loss record 10 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x985507A: lfq_new (lfq.c:31)
+==26527==    by 0x9853568: module_start (mod_sigtran.c:873)
+==26527==    by 0x40117A: ayubd_module_load (main.c:58)
+==26527==    by 0x4013A4: ayubd_config_read (main.c:20)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 24 bytes in 1 blocks are still reachable in loss record 11 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x985507A: lfq_new (lfq.c:31)
+==26527==    by 0x9856A23: sigtran_tcap_worker (sigtran_tcap.c:779)
+==26527==    by 0x629DA50: start_thread (in /lib64/libpthread-2.12.so)
+==26527==    by 0xA4636FF: ???
+==26527== 
+==26527== 25 bytes in 1 blocks are still reachable in loss record 12 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x4006250: expand_dynamic_string_token (in /lib64/ld-2.12.so)
+==26527==    by 0x40082F1: _dl_map_object (in /lib64/ld-2.12.so)
+==26527==    by 0x4012B94: dl_open_worker (in /lib64/ld-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x4012639: _dl_open (in /lib64/ld-2.12.so)
+==26527==    by 0x50B3F65: dlopen_doit (in /lib64/libdl-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x50B429B: _dlerror_run (in /lib64/libdl-2.12.so)
+==26527==    by 0x50B3EE0: dlopen@@GLIBC_2.2.5 (in /lib64/libdl-2.12.so)
+==26527==    by 0x40114C: ayubd_module_load (main.c:41)
+==26527==    by 0x4013B5: ayubd_config_read (main.c:21)
+==26527== 
+==26527== 29 bytes in 1 blocks are still reachable in loss record 13 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x4006250: expand_dynamic_string_token (in /lib64/ld-2.12.so)
+==26527==    by 0x40082F1: _dl_map_object (in /lib64/ld-2.12.so)
+==26527==    by 0x4012B94: dl_open_worker (in /lib64/ld-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x4012639: _dl_open (in /lib64/ld-2.12.so)
+==26527==    by 0x50B3F65: dlopen_doit (in /lib64/libdl-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x50B429B: _dlerror_run (in /lib64/libdl-2.12.so)
+==26527==    by 0x50B3EE0: dlopen@@GLIBC_2.2.5 (in /lib64/libdl-2.12.so)
+==26527==    by 0x40114C: ayubd_module_load (main.c:41)
+==26527==    by 0x4012B8: ayubd_init (main.c:128)
+==26527== 
+==26527== 31 bytes in 1 blocks are still reachable in loss record 14 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x4006250: expand_dynamic_string_token (in /lib64/ld-2.12.so)
+==26527==    by 0x40082F1: _dl_map_object (in /lib64/ld-2.12.so)
+==26527==    by 0x4012B94: dl_open_worker (in /lib64/ld-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x4012639: _dl_open (in /lib64/ld-2.12.so)
+==26527==    by 0x50B3F65: dlopen_doit (in /lib64/libdl-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x50B429B: _dlerror_run (in /lib64/libdl-2.12.so)
+==26527==    by 0x50B3EE0: dlopen@@GLIBC_2.2.5 (in /lib64/libdl-2.12.so)
+==26527==    by 0x40114C: ayubd_module_load (main.c:41)
+==26527==    by 0x40124A: ayubd_init (main.c:114)
+==26527== 
+==26527== 31 bytes in 1 blocks are still reachable in loss record 15 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x4006250: expand_dynamic_string_token (in /lib64/ld-2.12.so)
+==26527==    by 0x40082F1: _dl_map_object (in /lib64/ld-2.12.so)
+==26527==    by 0x4012B94: dl_open_worker (in /lib64/ld-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x4012639: _dl_open (in /lib64/ld-2.12.so)
+==26527==    by 0x50B3F65: dlopen_doit (in /lib64/libdl-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x50B429B: _dlerror_run (in /lib64/libdl-2.12.so)
+==26527==    by 0x50B3EE0: dlopen@@GLIBC_2.2.5 (in /lib64/libdl-2.12.so)
+==26527==    by 0x40114C: ayubd_module_load (main.c:41)
+==26527==    by 0x4013A4: ayubd_config_read (main.c:20)
+==26527== 
+==26527== 32 bytes in 1 blocks are still reachable in loss record 16 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x50B430F: _dlerror_run (in /lib64/libdl-2.12.so)
+==26527==    by 0x50B3EE0: dlopen@@GLIBC_2.2.5 (in /lib64/libdl-2.12.so)
+==26527==    by 0x40114C: ayubd_module_load (main.c:41)
+==26527==    by 0x40124A: ayubd_init (main.c:114)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 32 bytes in 1 blocks are still reachable in loss record 17 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x98569AD: sigtran_tcap_worker (sigtran_tcap.c:770)
+==26527==    by 0x629DA50: start_thread (in /lib64/libpthread-2.12.so)
+==26527==    by 0xA4636FF: ???
+==26527== 
+==26527== 48 bytes in 1 blocks are still reachable in loss record 18 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x98536C1: module_start (mod_sigtran.c:931)
+==26527==    by 0x40117A: ayubd_module_load (main.c:58)
+==26527==    by 0x4013A4: ayubd_config_read (main.c:20)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 48 bytes in 1 blocks are still reachable in loss record 19 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0xAE69376: http_on_connect (mod_http.c:403)
+==26527==    by 0x40104C: ayubd_run (main.c:182)
+==26527==    by 0x64D1D5C: (below main) (in /lib64/libc-2.12.so)
+==26527== 
+==26527== 48 bytes in 3 blocks are still reachable in loss record 20 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x400E2D: lfq_node_new (lfq.c:17)
+==26527==    by 0x400EF4: lfq_new (lfq.c:32)
+==26527==    by 0x4012ED: ayubd_init (main.c:133)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 48 bytes in 3 blocks are still reachable in loss record 21 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x400E2D: lfq_node_new (lfq.c:17)
+==26527==    by 0x400E99: lfq_enqueue (lfq.c:55)
+==26527==    by 0x40106F: ayubd_run (main.c:187)
+==26527==    by 0x64D1D5C: (below main) (in /lib64/libc-2.12.so)
+==26527== 
+==26527== 48 bytes in 1 blocks are definitely lost in loss record 22 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x6E48C5E: module_start (mod_signal.c:123)
+==26527==    by 0x40117A: ayubd_module_load (main.c:58)
+==26527==    by 0x4012B8: ayubd_init (main.c:128)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 48 bytes in 1 blocks are definitely lost in loss record 23 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x985344D: module_start (mod_sigtran.c:1214)
+==26527==    by 0x40117A: ayubd_module_load (main.c:58)
+==26527==    by 0x4013A4: ayubd_config_read (main.c:20)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 48 bytes in 1 blocks are definitely lost in loss record 24 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x98535AE: module_start (mod_sigtran.c:878)
+==26527==    by 0x40117A: ayubd_module_load (main.c:58)
+==26527==    by 0x4013A4: ayubd_config_read (main.c:20)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 48 bytes in 1 blocks are definitely lost in loss record 25 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0xAE6912A: module_start (mod_http.c:479)
+==26527==    by 0x40117A: ayubd_module_load (main.c:58)
+==26527==    by 0x4013B5: ayubd_config_read (main.c:21)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 56 bytes in 1 blocks are still reachable in loss record 26 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x985692F: sigtran_tcap_worker (sigtran_tcap.c:756)
+==26527==    by 0x629DA50: start_thread (in /lib64/libpthread-2.12.so)
+==26527==    by 0xA4636FF: ???
+==26527== 
+==26527== 56 bytes in 1 blocks are still reachable in loss record 27 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x985699B: sigtran_tcap_worker (sigtran_tcap.c:769)
+==26527==    by 0x629DA50: start_thread (in /lib64/libpthread-2.12.so)
+==26527==    by 0xA4636FF: ???
+==26527== 
+==26527== 64 bytes in 1 blocks are still reachable in loss record 28 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x4012A8: ayubd_init (main.c:121)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 64 bytes in 4 blocks are still reachable in loss record 29 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x400E2D: lfq_node_new (lfq.c:17)
+==26527==    by 0x400EF4: lfq_new (lfq.c:32)
+==26527==    by 0x4012FC: ayubd_init (main.c:134)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 72 bytes in 1 blocks are still reachable in loss record 30 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x40123A: ayubd_init (main.c:113)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 96 bytes in 1 blocks are still reachable in loss record 31 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x400FE53: _dl_check_map_versions (in /lib64/ld-2.12.so)
+==26527==    by 0x4012F18: dl_open_worker (in /lib64/ld-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x4012639: _dl_open (in /lib64/ld-2.12.so)
+==26527==    by 0x50B3F65: dlopen_doit (in /lib64/libdl-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x50B429B: _dlerror_run (in /lib64/libdl-2.12.so)
+==26527==    by 0x50B3EE0: dlopen@@GLIBC_2.2.5 (in /lib64/libdl-2.12.so)
+==26527==    by 0x40114C: ayubd_module_load (main.c:41)
+==26527==    by 0x40124A: ayubd_init (main.c:114)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 96 bytes in 1 blocks are still reachable in loss record 32 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x401272: ayubd_init (main.c:118)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 96 bytes in 1 blocks are still reachable in loss record 33 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x401284: ayubd_init (main.c:119)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 96 bytes in 4 blocks are still reachable in loss record 34 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x400EEA: lfq_new (lfq.c:31)
+==26527==    by 0x4012ED: ayubd_init (main.c:133)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 96 bytes in 4 blocks are still reachable in loss record 35 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x400EEA: lfq_new (lfq.c:31)
+==26527==    by 0x4012FC: ayubd_init (main.c:134)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 128 bytes in 1 blocks are still reachable in loss record 36 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x401296: ayubd_init (main.c:120)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 144 bytes in 1 blocks are still reachable in loss record 37 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x400FE53: _dl_check_map_versions (in /lib64/ld-2.12.so)
+==26527==    by 0x4012F18: dl_open_worker (in /lib64/ld-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x4012639: _dl_open (in /lib64/ld-2.12.so)
+==26527==    by 0x50B3F65: dlopen_doit (in /lib64/libdl-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x50B429B: _dlerror_run (in /lib64/libdl-2.12.so)
+==26527==    by 0x50B3EE0: dlopen@@GLIBC_2.2.5 (in /lib64/libdl-2.12.so)
+==26527==    by 0x40114C: ayubd_module_load (main.c:41)
+==26527==    by 0x4012B8: ayubd_init (main.c:128)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 192 bytes in 1 blocks are still reachable in loss record 38 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x400FE53: _dl_check_map_versions (in /lib64/ld-2.12.so)
+==26527==    by 0x4012F18: dl_open_worker (in /lib64/ld-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x4012639: _dl_open (in /lib64/ld-2.12.so)
+==26527==    by 0x50B3F65: dlopen_doit (in /lib64/libdl-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x50B429B: _dlerror_run (in /lib64/libdl-2.12.so)
+==26527==    by 0x50B3EE0: dlopen@@GLIBC_2.2.5 (in /lib64/libdl-2.12.so)
+==26527==    by 0x40114C: ayubd_module_load (main.c:41)
+==26527==    by 0x4013A4: ayubd_config_read (main.c:20)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 192 bytes in 1 blocks are still reachable in loss record 39 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x400FE53: _dl_check_map_versions (in /lib64/ld-2.12.so)
+==26527==    by 0x4012F18: dl_open_worker (in /lib64/ld-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x4012639: _dl_open (in /lib64/ld-2.12.so)
+==26527==    by 0x50B3F65: dlopen_doit (in /lib64/libdl-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x50B429B: _dlerror_run (in /lib64/libdl-2.12.so)
+==26527==    by 0x50B3EE0: dlopen@@GLIBC_2.2.5 (in /lib64/libdl-2.12.so)
+==26527==    by 0x40114C: ayubd_module_load (main.c:41)
+==26527==    by 0x4013B5: ayubd_config_read (main.c:21)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 272 bytes in 1 blocks are possibly lost in loss record 40 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x40119A2: _dl_allocate_tls (in /lib64/ld-2.12.so)
+==26527==    by 0x629D27C: pthread_create@@GLIBC_2.2.5 (in /lib64/libpthread-2.12.so)
+==26527==    by 0x985361E: module_start (mod_sigtran.c:900)
+==26527==    by 0x40117A: ayubd_module_load (main.c:58)
+==26527==    by 0x4013A4: ayubd_config_read (main.c:20)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 272 bytes in 1 blocks are possibly lost in loss record 41 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x40119A2: _dl_allocate_tls (in /lib64/ld-2.12.so)
+==26527==    by 0x629D27C: pthread_create@@GLIBC_2.2.5 (in /lib64/libpthread-2.12.so)
+==26527==    by 0x98569F8: sigtran_tcap_worker (sigtran_tcap.c:777)
+==26527==    by 0x629DA50: start_thread (in /lib64/libpthread-2.12.so)
+==26527==    by 0xA4636FF: ???
+==26527== 
+==26527== 512 bytes in 1 blocks are still reachable in loss record 42 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0xAE69619: http_on_data (mod_http.c:377)
+==26527==    by 0x40104C: ayubd_run (main.c:182)
+==26527==    by 0x64D1D5C: (below main) (in /lib64/libc-2.12.so)
+==26527== 
+==26527== 628 bytes in 4 blocks are still reachable in loss record 43 of 49
+==26527==    at 0x4C27A2E: malloc (vg_replace_malloc.c:270)
+==26527==    by 0x4C27BA2: realloc (vg_replace_malloc.c:662)
+==26527==    by 0x400AF96: _dl_new_object (in /lib64/ld-2.12.so)
+==26527==    by 0x40071DD: _dl_map_object_from_fd (in /lib64/ld-2.12.so)
+==26527==    by 0x4008399: _dl_map_object (in /lib64/ld-2.12.so)
+==26527==    by 0x4012B94: dl_open_worker (in /lib64/ld-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x4012639: _dl_open (in /lib64/ld-2.12.so)
+==26527==    by 0x50B3F65: dlopen_doit (in /lib64/libdl-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x50B429B: _dlerror_run (in /lib64/libdl-2.12.so)
+==26527==    by 0x50B3EE0: dlopen@@GLIBC_2.2.5 (in /lib64/libdl-2.12.so)
+==26527== 
+==26527== 768 bytes in 1 blocks are still reachable in loss record 44 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x9853400: module_start (mod_sigtran.c:1206)
+==26527==    by 0x40117A: ayubd_module_load (main.c:58)
+==26527==    by 0x4013A4: ayubd_config_read (main.c:20)
+==26527==    by 0x40140F: main (main.c:13)
+==26527== 
+==26527== 1,088 bytes in 4 blocks are possibly lost in loss record 45 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x40119A2: _dl_allocate_tls (in /lib64/ld-2.12.so)
+==26527==    by 0x629D27C: pthread_create@@GLIBC_2.2.5 (in /lib64/libpthread-2.12.so)
+==26527==    by 0x401331: ayubd_init (main.c:137)
+==26527==    by 0x4013FF: main (main.c:11)
+==26527== 
+==26527== 2,048 bytes in 1 blocks are still reachable in loss record 46 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0xAE695FE: http_on_data (mod_http.c:375)
+==26527==    by 0x40104C: ayubd_run (main.c:182)
+==26527==    by 0x64D1D5C: (below main) (in /lib64/libc-2.12.so)
+==26527== 
+==26527== 2,056 bytes in 1 blocks are still reachable in loss record 47 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0xAE6964E: http_on_data (mod_http.c:369)
+==26527==    by 0x40104C: ayubd_run (main.c:182)
+==26527==    by 0x64D1D5C: (below main) (in /lib64/libc-2.12.so)
+==26527== 
+==26527== 4,756 bytes in 4 blocks are still reachable in loss record 48 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x400ADDE: _dl_new_object (in /lib64/ld-2.12.so)
+==26527==    by 0x40071DD: _dl_map_object_from_fd (in /lib64/ld-2.12.so)
+==26527==    by 0x4008399: _dl_map_object (in /lib64/ld-2.12.so)
+==26527==    by 0x4012B94: dl_open_worker (in /lib64/ld-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x4012639: _dl_open (in /lib64/ld-2.12.so)
+==26527==    by 0x50B3F65: dlopen_doit (in /lib64/libdl-2.12.so)
+==26527==    by 0x400E285: _dl_catch_error (in /lib64/ld-2.12.so)
+==26527==    by 0x50B429B: _dlerror_run (in /lib64/libdl-2.12.so)
+==26527==    by 0x50B3EE0: dlopen@@GLIBC_2.2.5 (in /lib64/libdl-2.12.so)
+==26527==    by 0x40114C: ayubd_module_load (main.c:41)
+==26527== 
+==26527== 12,288 bytes in 1 blocks are still reachable in loss record 49 of 49
+==26527==    at 0x4C267BB: calloc (vg_replace_malloc.c:593)
+==26527==    by 0x400FBE: ayubd_run (main.c:154)
+==26527==    by 0x64D1D5C: (below main) (in /lib64/libc-2.12.so)
+==26527== 
+==26527== LEAK SUMMARY:
+==26527==    definitely lost: 192 bytes in 4 blocks
+==26527==    indirectly lost: 0 bytes in 0 blocks
+==26527==      possibly lost: 1,632 bytes in 6 blocks
+==26527==    still reachable: 25,060 bytes in 61 blocks
+==26527==         suppressed: 0 bytes in 0 blocks
+==26527== 
+==26527== For counts of detected and suppressed errors, rerun with: -v
+==26527== ERROR SUMMARY: 7 errors from 7 contexts (suppressed: 6 from 6)

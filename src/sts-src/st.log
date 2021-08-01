@@ -1,0 +1,165 @@
+Going to load module: license
+[mod_license.c       :  10] module_start                  
+[mod_license.c       :  12] module_start                  : *** License looks OK ***
+Going to load module: signal
+Going to load module: sigtran
+[mod_sigtran.c       :1129] module_start                  : ckey=<msc_ip>, cptr=<10.21.11.2>
+[mod_sigtran.c       :1129] module_start                  : ckey=<msc_port>, cptr=<3037>
+[mod_sigtran.c       :1129] module_start                  : ckey=<gw_ip>, cptr=<10.21.193.67>
+[mod_sigtran.c       :1129] module_start                  : ckey=<gw_port>, cptr=<2905>
+[mod_sigtran.c       :1129] module_start                  : ckey=<msc_pc>, cptr=<2500>
+[mod_sigtran.c       :1129] module_start                  : ckey=<gw_pc>, cptr=<2229>
+[mod_sigtran.c       :1129] module_start                  : ckey=<hlr_gt>, cptr=<880150159840>
+[mod_sigtran.c       :1129] module_start                  : ckey=<gw_gt>, cptr=<880150159936>
+[mod_sigtran.c       :1129] module_start                  : ckey=<hlr_ssn>, cptr=<6>
+[mod_sigtran.c       :1129] module_start                  : ckey=<gw_ssn>, cptr=<147>
+[mod_sigtran.c       :1129] module_start                  : ckey=<app_url>, cptr=<http://127.0.0.1/ussd/mo.php>
+[mod_sigtran.c       : 858] sigtran_tcap_init             
+[mod_sigtran.c       : 912] sigtran_m3ua_hb_init          
+[m3ua.c              : 324] m3ua_octet_ASPUP              
+[m3ua.c              :  14] m3ua_build                    
+[m3ua.c              :  41] m3ua2octet                    
+[m3ua.c              : 197] m3ua_free                     
+[utils.c             : 107] sigtran_send_ASPUP            : Sending ASPUP
+[sigtran_tcap.c      : 970] sigtran_tcap_worker           
+[sigtran_tcap.c      :1013] map_init                      
+Going to load module: http
+[sigtran_tcap.c      :1036] map_init                      : Going to create 1 MAP workers
+[sigtran_tcap.c      : 978] sigtran_tcap_worker           : Waiting for data from SIGTRAN
+[sigtran_tcap.c      :1204] map_stack_start               
+[sigtran_tcap.c      :1221] map_stack_start               : Starting MAP Stack [0]
+[sigtran_tcap.c      :1228] map_stack_start               : [0] Waiting for packets from TCAP worker thread.
+[mod_http.c          : 422] module_start                  
+Running event loop
+[mod_sigtran.c       : 778] sigtran_on_data               
+[mod_sigtran.c       : 766] sigtran_process_data          
+[mod_sigtran.c       : 537] sigtran_state_machine         
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:0 (assoc:0x0) [20 bytes]:
+[utils.c             : 145] sctp_handle_notification      : ^^^ assoc_change: state=0, error=0, instr=2 outstr=2
+[mod_sigtran.c       : 778] sigtran_on_data               
+[mod_sigtran.c       : 766] sigtran_process_data          
+[mod_sigtran.c       : 537] sigtran_state_machine         
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:0 (assoc:0x3c) [8 bytes]:
+[m3ua.c              : 126] octet2m3ua                    
+[mod_sigtran.c       : 482] sigtran_state_aspsm           
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:1 (assoc:0x3c) [16 bytes]:
+[m3ua.c              : 126] octet2m3ua                    
+[m3ua.c              : 188] m3ua_add_tlv                  
+[mod_sigtran.c       : 314] sigtran_state_mgmt            
+[mod_sigtran.c       : 334] sigtran_state_mgmt            : Status type: 0x1
+[mod_sigtran.c       : 335] sigtran_state_mgmt            : Status info: 0x2
+[m3ua.c              : 360] m3ua_octet_ASPAC              
+[m3ua.c              :  14] m3ua_build                    
+[m3ua.c              :  41] m3ua2octet                    
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 343] sigtran_state_mgmt            : Sending ASPAC
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 778] sigtran_on_data               
+[mod_sigtran.c       : 766] sigtran_process_data          
+[mod_sigtran.c       : 537] sigtran_state_machine         
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:2 (assoc:0x3c) [16 bytes]:
+[m3ua.c              : 126] octet2m3ua                    
+[m3ua.c              : 188] m3ua_add_tlv                  
+[mod_sigtran.c       : 510] sigtran_state_asptm           
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:3 (assoc:0x3c) [16 bytes]:
+[m3ua.c              : 126] octet2m3ua                    
+[m3ua.c              : 188] m3ua_add_tlv                  
+[mod_sigtran.c       : 314] sigtran_state_mgmt            
+[mod_sigtran.c       : 334] sigtran_state_mgmt            : Status type: 0x1
+[mod_sigtran.c       : 335] sigtran_state_mgmt            : Status info: 0x3
+[m3ua.c              : 396] m3ua_octet_DAVA               
+[m3ua.c              :  14] m3ua_build                    
+[m3ua.c              : 188] m3ua_add_tlv                  
+[m3ua.c              :  41] m3ua2octet                    
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 356] sigtran_state_mgmt            : Sending DAVA
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:4 (assoc:0x3c) [16 bytes]:
+[m3ua.c              : 126] octet2m3ua                    
+[m3ua.c              : 188] m3ua_add_tlv                  
+[mod_sigtran.c       : 446] sigtran_state_ssnm            
+[mod_sigtran.c       : 462] sigtran_state_ssnm            : Mask: 0x0 (0)
+[m3ua.c              : 197] m3ua_free                     
+[mod_sigtran.c       : 778] sigtran_on_data               
+[mod_sigtran.c       : 766] sigtran_process_data          
+[mod_sigtran.c       : 537] sigtran_state_machine         
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:0 seq:0 (assoc:0x0) [148 bytes]:
+[utils.c             : 170] sctp_handle_notification      : ^^^ intf_change: 10.21.11.130 state=5, error=2
+[mod_http.c          : 394] http_on_connect               
+[mod_http.c          : 352] http_on_data                  
+[mod_http.c          : 372] http_on_data                  : HTTP Session Data allocated
+[mod_http.c          : 178] http_process_data             
+[mod_http.c          : 134] http_parse_header             
+[mod_http.c          :  30] http_request_method_cb        
+[mod_http.c          :  39] http_request_path_cb          
+[mod_http.c          :  81] http_query_string_cb          
+[mod_http.c          :  18] http_request_uri_cb           
+[mod_http.c          : 102] http_version_cb               
+[mod_http.c          :  62] http_field_cb                 
+[mod_http.c          : 123] http_header_done_cb           
+[sigtran_http_resp_func.c: 342] sigtran_http_resp_func        
+[sigtran_http_resp_func.c: 364] sigtran_http_resp_func        : Request=/sigtran
+[sigtran_http_resp_func.c: 121] sigtran_http_new_tid          
+[sigtran_http_resp_func.c: 128] sigtran_http_new_tid          : Session Begins by Application
+[map-dialog-mgmt.c   :  55] map_set_next_dialogue         
+[map-dialog-mgmt.c   :  67] map_set_next_dialogue         : Allocated Dialogue {map_id=0, dialog_id=65535}
+[sigtran_http_resp_func.c: 153] sigtran_http_new_tid          : UGW TID: 65535
+[sigtran_http_resp_func.c: 154] sigtran_http_new_tid          : MAP STACK ID: 0
+[sigtran_http_resp_func.c: 155] sigtran_http_new_tid          : MAP DIALOG ID: 65535
+[dialogue-utils.c    :  39] ati_dialogue_request_build    
+[map-utils.c         :  93] ati_session_comp_build        
+[map-utils.c         : 133] map_build_ati_arg             
+[map-utils.c         :  54] sigtran_create_map_comp       
+[map-utils.c         : 286] map_free_ati_arg              
+[m3ua.c              : 474] m3ua_pdata2octet              
+[m3ua.c              :  14] m3ua_build                    
+[m3ua.c              : 188] m3ua_add_tlv                  
+[m3ua.c              :  41] m3ua2octet                    
+[sigtran_http_resp_func.c: 272] tcap_msg_begin_mt             : 128 bytes m3ua packet created
+[m3ua.c              : 197] m3ua_free                     
+[map-utils.c         :  12] ussd_session_comp_free        
+[dialogue-utils.c    : 228] ussd_dialogue_request_free    
+[sigtran_http_resp_func.c: 384] sigtran_http_resp_func        : Response=65535
+[mod_sigtran.c       : 778] sigtran_on_data               
+[mod_sigtran.c       : 766] sigtran_process_data          
+[mod_sigtran.c       : 537] sigtran_state_machine         
+[mod_sigtran.c       : 558] sigtran_state_machine         : From str:1 seq:0 (assoc:0x3c) [164 bytes]:
+[m3ua.c              : 126] octet2m3ua                    
+[m3ua.c              : 188] m3ua_add_tlv                  
+[mod_sigtran.c       : 386] sigtran_state_tm              
+[m3ua.c              : 442] m3ua_octet2pdata              
+[mod_sigtran.c       : 249] sigtran_sccp_udt              
+[m3ua.c              :  14] m3ua_build                    
+[mod_sigtran.c       : 284] sigtran_sccp_udt              : Sending sinfo to tcap for processing
+[m3ua.c              : 197] m3ua_free                     
+[sigtran_tcap.c      : 980] sigtran_tcap_worker           : Data available from SIGTRAN. Going to process.
+[sigtran_tcap.c      : 935] sigtran_tcap_process          
+[sigtran_tcap.c      : 828] sigtran_tcap_parse            
+[sigtran_tcap.c      :1074] sigtran_tcap_resolve_map_id   
+[sigtran_tcap.c      :1159] sigtran_tcap_resolve_map_id   : Session Ended by User/Network
+[map-dialog-mgmt.c   :  79] map_get_dialogue              
+[sigtran_tcap.c      :1168] sigtran_tcap_resolve_map_id   : UGW TID: 65535
+[sigtran_tcap.c      :1169] sigtran_tcap_resolve_map_id   : MAP STACK ID: 0
+[sigtran_tcap.c      :1170] sigtran_tcap_resolve_map_id   : MAP DIALOG ID: 65535
+[sigtran_tcap.c      : 915] sigtran_tcap_parse            : Going to put to queue of MAP STACK [0]
+[sigtran_tcap.c      : 978] sigtran_tcap_worker           : Waiting for data from SIGTRAN
+[sigtran_tcap.c      :1233] map_stack_start               : [0] received from TCAP worker thread.
+[sigtran_tcap.c      : 749] sigtran_tcap_comp_parse       
+[sigtran_tcap.c      : 173] sigtran_tcap_parameter_parse  
+[sigtran_tcap.c      : 225] sigtran_tcap_parameter_parse  : opcode: anyTimeInterrogation [71]
+<AnyTimeInterrogationRes>
+    <subscriberInfo>
+        <locationInformation>
+            <ageOfLocationInformation>38</ageOfLocationInformation>
+            <geographicalInformation>10 00 00 00 00 00 00 00</geographicalInformation>
+            <vlr-number>91 88 10 05 51 89 00</vlr-number>
+            <cellGlobalIdOrServiceAreaIdOrLAI>
+                <cellGlobalIdOrServiceAreaIdFixedLength>74 F0 40 03 F9 48 86</cellGlobalIdOrServiceAreaIdFixedLength>
+            </cellGlobalIdOrServiceAreaIdOrLAI>
+        </locationInformation>
+    </subscriberInfo>
+</AnyTimeInterrogationRes>
+[sigtran_tcap.c      :1228] map_stack_start               : [0] Waiting for packets from TCAP worker thread.
+[sigtran_tcap.c      : 396] ussd_session_handler          

@@ -1,0 +1,23 @@
+-- Minimal INAP support..
+-- http://www.itu.int/ITU-T/formal-language/itu-t/q/q1228/1997/IN-CS2-datatypes.html
+
+CS2-datatypes {itu-t recommendation q 1228 modules(0) in-cs2-datatypes(0)
+  version1(0)} DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+CriticalityType ::= ENUMERATED {ignore(0), abort(1)}
+
+MiscCallInfo ::= SEQUENCE {
+  messageType   [0]  ENUMERATED {request(0), notification(1)},
+  dpAssignment
+    [1]  ENUMERATED {individualLine(0), groupBased(1), officeBased(2)} OPTIONAL
+}
+
+-- Indicates the type of bearer capability connection to the user. For bearerCapability, either 
+-- DSS 1 (Rec. Q.931) or the ISUP User Service Information (Rec. Q.763) encoding can be used. Refer 
+-- to the Q.763 Transmission Medium Requirement parameter for tmr encoding.
+BothwayThroughConnectionInd ::= ENUMERATED {
+  bothwayPathRequired(0), bothwayPathNotRequired(1)}
+
+
+END

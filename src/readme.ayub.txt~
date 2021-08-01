@@ -1,0 +1,81 @@
+
+
+https://osmocom.org/projects/libosmocore/wiki/Libosmocore
+
+git clone git://git.osmocom.org/libosmocore.git
+cd libosmocore/
+autoreconf -i
+./configure --disable-pcsc --prefix=${LPATH}
+make
+make install
+
+
+# Depends on ortp
+# emerge -av ortp
+#
+
+# depends on 'ortp' package
+git clone git://git.osmocom.org/libosmo-abis
+cd libosmo-abis
+autoreconf -i
+./configure --prefix=$LPATH --disable-dahdi
+make
+make install
+
+
+# depends on libosmo-abis
+git clone git://git.osmocom.org/libosmo-netif
+cd libosmo-netif
+autoreconf -i
+./configure --prefix=$LPATH
+make
+make install
+
+
+# depends on libosmo-netif
+git clone git://git.osmocom.org/libosmo-sccp
+cd libosmo-sccp
+autoreconf -i
+./configure --prefix=$LPATH
+make
+make install
+
+
+git clone git://git.osmocom.org/libosmo-asn1-tcap
+cd libosmo-asn1-tcap
+autoreconf -i
+./configure --prefix=$LPATH
+make
+make install
+
+
+
+
+# without dependencies other than libosmocore
+
+git clone git://git.osmocom.org/libsmpp34
+cd libsmpp34
+autoreconf -i
+./configure --prefix=$LPATH
+make
+make install
+
+
+git clone git://git.osmocom.org/asn1c
+cd asn1c
+autoreconf -i
+./configure --prefix=$LPATH
+make
+make install
+
+
+git clone git://git.osmocom.org/libasn1c
+cd libasn1c
+autoreconf -i
+./configure --prefix=$LPATH
+make
+make install
+
+# Not useful, just keeping as reference (maybe works for Erlang)
+git clone git://git.osmocom.org/asn1/ss7
+

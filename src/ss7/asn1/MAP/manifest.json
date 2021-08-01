@@ -1,0 +1,8 @@
+{
+   "name" : "MAP",
+   "dependencies" : [ "ROS" ],
+   "rootModules" : [ 
+      "MAP-DialogueInformation", 
+      "MAP-ApplicationContexts"
+   ] 
+}

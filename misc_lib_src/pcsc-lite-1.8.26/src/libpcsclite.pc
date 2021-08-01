@@ -1,0 +1,13 @@
+prefix=/home/ayub/.local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/PCSC
+usbdropdir=/home/ayub/.local/lib/pcsc/drivers
+serialconfdir=/home/ayub/.local/etc/reader.conf.d
+
+Name: PCSC Lite
+Description: PC/SC smart card interface
+Version: 1.8.26
+Libs: -L${libdir} -lpcsclite
+Libs.private: 
+Cflags: -I${includedir} -pthread

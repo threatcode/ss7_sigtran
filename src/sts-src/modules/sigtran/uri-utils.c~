@@ -1,0 +1,123 @@
+/*
+ * uri-utils.c
+ */
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdlib.h>
+#include <string.h>
+#include "uri_parser.h"
+#include "defs.h"
+#include <unistd.h>
+
+#include <lib/liburi/uri_parser.h>
+
+#define UA	"nixtec-ussdgw/1.0"
+static const struct timeval ctimeout = { 30, 0 }; /* connect timeout */
+static const struct timeval ttimeout = { 60, 0}; /* transfer timeout */
+
+
+/* set common options */
+static void uri_set_socket_opts(int sockfd)
+{ 
+  if (setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, &ctimeout, sizeof(ctimeout)) < 0) {
+    CRITICAL("Could not setsockopt(SO_SNDTIMEO)\n");
+  }
+  if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &ttimeout, sizeof(ttimeout)) < 0) {
+    CRITICAL("Could not setsockopt(SO_RCVTIMEO)\n");
+  }
+
+}
+
+/* caller should free with MYFREE(ptr) */
+#define URI_RECV_BUF_MAX	1024
+char *uri_get_contents(const char *uri, int urilen, size_t *size)
+{
+  uri_t *u = NULL;
+  char *text = NULL;
+  char *finaltext = NULL;
+  char *tmptext = NULL;
+  size_t pos = 0;
+  size_t textlen = 0;
+  ssize_t nr = 0;
+  int sockfd = 0;
+  struct sockaddr_in servaddr = { };
+  const char *error_at = NULL;
+  *size = 0;
+
+  u = uri_new();
+  if (!u) goto end;
+
+  if (urilen <= 0) goto free_end;
+
+  if (!uri_parse(u, uri, urilen, &error_at)) {
+    if (error_at) CRITICAL("Error for %s at %s\n", uri, error_at);
+    goto free_end;
+  } else if (error_at) {
+    uri_print(u);
+  }
+
+  sockfd = socket(AF_INET, SOCK_STREAM, 0);
+  if (sockfd < 0) {
+    perror("socket");
+    goto free_end;
+  }
+  uri_set_socket_opts(sockfd);
+
+  memset(&servaddr, 0, sizeof(servaddr));
+  servaddr.sin_family = AF_INET;
+  servaddr.sin_port = htons(u->port);
+  if (inet_pton(AF_INET, u->host, &servaddr.sin_addr) < 1) {
+    CRITICAL("Invalid IP address specified!\n");
+    goto sock_close;
+  }
+
+  if (connect(sockfd, (struct sockaddr *) &servaddr, sizeof(servaddr)) < 0) {
+    CRITICAL("Error connecting to server\n");
+    goto sock_close;
+  }
+
+  textlen = URI_RECV_BUF_MAX;
+  text = MYCALLOC(1, textlen);
+  if (!text) goto sock_close;
+
+  pos = snprintf(text, textlen-1, "GET %s%s HTTP/1.0\r\n"
+      "User-Agent: " UA "\r\n"
+      "\r\n\r\n",
+      u->path, (u->query? u->query : ""));
+  nr = send(sockfd, text, pos, 0);
+  if (nr != pos) {
+    CRITICAL("Error sending data to server\n");
+    goto sock_close;
+  }
+
+  memset(text, 0, textlen);
+  pos = 0;
+  while ((nr = recv(sockfd, text+pos, textlen-pos-1, 0)) > 0) {
+    pos += nr;
+    if (textlen-pos <= 1) {
+      break; // no more data should be attempted to read
+    }
+  }
+  *(text+pos) = '\0'; /* add terminating NUL byte */
+
+  tmptext = strstr(text, "\r\n\r\n");
+  if (tmptext) {
+    tmptext += 4;
+    finaltext = MYSTRDUP(tmptext);
+    *size = text + pos - tmptext;
+  }
+
+sock_close:
+  close(sockfd);
+
+free_end:
+  if (u) uri_free(u);
+
+end:
+  if (text) MYFREE(text);
+  return finaltext;
+}
+

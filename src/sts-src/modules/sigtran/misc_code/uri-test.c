@@ -1,0 +1,22 @@
+/*
+ * uri-test.c
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "defs.h"
+#include "mymdebug.h"
+#include "uri-utils.h"
+
+int main(void)
+{
+  char *uri = "http://127.0.0.1/ussd/ayub-mo.php?hello=there&this=is%20my%20uri%20parser";
+  size_t size = 0;
+
+  char *contents = NULL;
+  contents = uri_get_contents(uri, strlen(uri), &size);
+  fprintf(stderr, "Length: %lu\nData: [%s]\n", size, contents);
+  MYFREE(contents);
+
+  return 0;
+}

@@ -1,0 +1,6 @@
+{
+   "name" : "CAMEL-phase2",
+   "dependencies" : [ "ROS", "MAP" ],
+   "rootModules" : [ 
+      "CAP-classes" ] 
+}

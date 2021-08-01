@@ -1,0 +1,438 @@
+/*
+ * dialogue-utils.c
+ */
+
+#include "defs.h"
+#include "dialogue-utils.h"
+#include "MAP-DialoguePDU.h"
+#include <EXTERNAL.h>
+#include "AnyTimeInterrogationArg.h"
+
+#include <osmocom/core/utils.h>
+#include "utils.h"
+
+#include <asn_internal.h>		/* FREEMEM(), etc. */
+
+static const int map_dialogue_as_oid[] = { 0, 4, 0, 0, 1, 1, 1, 1 }; /* map-DialogueAS */
+static const int map_app_ctx_oid[] = { 0, 4, 0, 0, 1, 0, 0, 0 };
+/* MAP USSD Context */
+static const int networkUnstructuredSsContext_v2[] = { 0, 4, 0, 0, 1, 0, 19, 2 };
+/* CAMEL anyTimeInterrogation */
+static const int anyTimeInfoEnquiryContext_v3[] = { 0, 4, 0, 0, 1, 0, 29, 3 };
+
+static const int diag_ref_struct[] = { 0, 0, 17, 773, 1, 1, 1 };
+static const int diag_ref_unstruct[] = { 0, 0, 17, 773, 1, 2, 1 };
+
+static uint8_t _dial_version1 = 0x80;
+static BIT_STRING_t dial_version1 = {
+  .buf = &_dial_version1,
+  .size = 1,
+  .bits_unused = 7,
+};
+
+
+
+
+#if 0
+/* app_ctx_oid might be anyTimeInfoEnquiryContext_v3 */
+ExternalPDU_t *camel_ati_dialogue_request_build(void)
+{
+  FTRACE();
+
+  ExternalPDU_t *ext = NULL; /* whole Dialogue Portion */
+  DialoguePDU_t *dial = NULL;
+#if 0
+  MAP_OpenInfo_t *map_open = NULL;
+  ANY_t *uinf = NULL;
+#endif
+  AARQ_apdu_t *aarq = NULL;
+
+#if 0
+  /* encoded numbers */
+  uint8_t destbuf[20] = { 0 }; /* buffer should be large enough */
+  uint8_t destlen = 0;
+
+  /* encoded numbers */
+  uint8_t srcbuf[20] = { 0 }; /* buffer should be large enough */
+  uint8_t srclen = 0;
+
+  uint8_t encoding = 0xa0; /* Single ASN.1-type */
+  uint8_t encoding_len = 0;
+#define MAX_DIALOGUE_PDU_LEN	64
+  uint8_t map_dialogue_pdu[MAX_DIALOGUE_PDU_LEN] = { 0 };
+  uint8_t map_dialogue_pdu_len = 0;
+  asn_enc_rval_t er = { 0 };  /* Encoder return value */
+
+#define MAX_DIRECT_REFERENCE_LEN	16
+  uint8_t direct_reference_buf[MAX_DIRECT_REFERENCE_LEN] = { 0 };
+  uint8_t direct_reference_buf_len = 0;
+  uint8_t *user_information_buf = NULL;;
+  uint8_t i = 0;
+  struct user_information *uinfo_struct = NULL;
+
+  OCTET_STRING_t destref = { 0 };
+  OCTET_STRING_t origref = { 0 };
+
+  OBJECT_IDENTIFIER_t direct_reference = { 0 };
+
+  MAP_DialoguePDU_t mdial = { 0 };
+#endif
+
+  ext = MYCALLOC(1, sizeof(*ext));
+  dial = &ext->dialog;
+
+  OBJECT_IDENTIFIER_set_arcs(&ext->oid, &diag_ref_struct,
+      sizeof(diag_ref_struct[0]),
+      ARRAY_SIZE(diag_ref_struct));
+
+#if 0
+  /* build MAP Dialogue (map_open) */
+  //mdial = MYCALLOC(1, sizeof(*mdial));
+  mdial.present = MAP_DialoguePDU_PR_map_open;
+  map_open = &mdial.choice.map_open;
+
+  encode_msisdn(destnum, strlen(destnum), destbuf, &destlen);
+  if (!destlen) goto err;
+
+  map_open->destinationReference = &destref;
+  map_open->destinationReference->buf = destbuf;
+  map_open->destinationReference->size = destlen;
+
+  encode_msisdn(srcnum, strlen(srcnum), srcbuf, &srclen);
+  if (!srclen) goto err;
+  map_open->originationReference = &origref;
+  map_open->originationReference->buf = srcbuf;
+  map_open->originationReference->size = srclen;
+
+  er = der_encode_to_buffer(&asn_DEF_MAP_DialoguePDU, &mdial, map_dialogue_pdu, sizeof(map_dialogue_pdu));
+  if (er.encoded > 0) {
+    map_dialogue_pdu_len = er.encoded;
+    //DTRACE("Encoded successfully, %ld bytes\n", er.encoded);
+    //hexdump(map_dialogue_pdu, map_dialogue_pdu_len);
+    encoding_len = map_dialogue_pdu_len;
+  } else {
+    DTRACE("Failed to encode map dialogue pdu Data\n");
+    goto err;
+  }
+
+
+  memset(&direct_reference, 0, sizeof(direct_reference));
+  OBJECT_IDENTIFIER_set_arcs(&direct_reference,
+      &map_dialogue_as_oid,
+      sizeof(map_dialogue_as_oid[0]),
+      ARRAY_SIZE(map_dialogue_as_oid));
+  er = der_encode_to_buffer(&asn_DEF_OBJECT_IDENTIFIER, &direct_reference, direct_reference_buf, sizeof(direct_reference_buf));
+  if (er.encoded > 0) {
+    direct_reference_buf_len = er.encoded;
+    //DTRACE("Encoded successfully, %ld bytes\n", er.encoded);
+    //hexdump(direct_reference_buf, direct_reference_buf_len);
+  } else {
+    DTRACE("Failed to encode object identifier Data\n");
+    goto err;
+  }
+
+#define MAX_USER_INFO_LEN		64
+  user_information_buf = MYCALLOC(1, MAX_USER_INFO_LEN);
+  i = 2;
+  memcpy(user_information_buf+i, direct_reference_buf, direct_reference_buf_len);
+  i += direct_reference_buf_len;
+  user_information_buf[i++] = encoding;
+  user_information_buf[i++] = encoding_len;
+  memcpy(user_information_buf+i, map_dialogue_pdu, map_dialogue_pdu_len);
+  i += map_dialogue_pdu_len;
+  user_information_buf[0] = 0x28; /* FIXME: hack */
+  user_information_buf[1] = i-2; /* FIXME: hack */
+
+#endif
+
+  //DTRACE("user_information_buf length: %d\n", i);
+  //hexdump(user_information_buf, i);
+
+  /* here comes TCAP part */
+  dial->present = DialoguePDU_PR_dialogueRequest;
+  aarq = &dial->choice.dialogueRequest;
+  aarq->protocol_version = &dial_version1;
+  OBJECT_IDENTIFIER_set_arcs(&aarq->application_context_name,
+      &anyTimeInfoEnquiryContext_v3,
+      sizeof(anyTimeInfoEnquiryContext_v3[0]),
+      ARRAY_SIZE(anyTimeInfoEnquiryContext_v3));
+
+#if 0
+  /* uinf == * ANY_t */
+  uinf = MYCALLOC(1, sizeof(*uinf));
+  uinf->buf = user_information_buf;
+  uinf->size = i;
+
+  uinfo_struct = MYCALLOC(1, sizeof(*uinfo_struct));
+  ASN_SEQUENCE_ADD(&uinfo_struct->list, uinf);
+  uinfo_struct->list.free = map_user_information_free;
+  //xer_fprint(stdout, &asn_DEF_DialoguePDU, dial);
+
+  aarq->user_information = uinfo_struct;
+#endif
+
+//  return ext;
+//err:
+  //ussd_dialogue_request_free(ext);
+//  camel_ati_dialogue_request_free(ext);
+//  ext = NULL;
+  /*
+  if (uinfo) MYFREE(uinfo);
+  if (uinf) MYFREE(uinf);
+
+  if (map_open->destinationReference) MYFREE(map_open->destinationReference);
+  if (map_open->originationReference) MYFREE(map_open->originationReference);
+  if (mdial) MYFREE(mdial);
+  */
+
+  return ext;
+}
+
+void camel_ati_dialogue_request_free(ExternalPDU_t *ext)
+{
+  FTRACE();
+
+  DialoguePDU_t *dial = NULL;
+  AARQ_apdu_t *aarq = NULL;
+  struct user_information *uinfo_struct = NULL;
+
+  if (ext) {
+    dial = &ext->dialog;
+    if (dial->present == DialoguePDU_PR_dialogueRequest) {
+      aarq = &dial->choice.dialogueRequest;
+      uinfo_struct = aarq->user_information;
+      if (uinfo_struct) {
+	asn_set_empty(&uinfo_struct->list); /* this will call the free function set (map_user_information_free) */
+	MYFREE(uinfo_struct);
+      }
+    }
+    MYFREE(ext);
+  }
+}
+#endif
+
+/* typedef ANY_t EXTERNAL_t */
+static void map_user_information_free(EXTERNAL_t *ptr)
+{
+  FTRACE();
+
+  ANY_t *uinf = ptr;
+  if (uinf) {
+    if (uinf->buf) MYFREE(uinf->buf);
+    MYFREE(uinf);
+  }
+}
+
+/* app_ctx_oid might be networkUnstructuredSsContext_v2 */
+ExternalPDU_t *ussd_dialogue_request_build(const char *destnum, const char *srcnum)
+{
+  FTRACE();
+
+  ExternalPDU_t *ext = NULL; /* whole Dialogue Portion */
+  DialoguePDU_t *dial = NULL;
+  MAP_OpenInfo_t *map_open = NULL;
+  AARQ_apdu_t *aarq = NULL;
+  ANY_t *uinf = NULL;
+
+  /* encoded numbers */
+  uint8_t destbuf[20] = { 0 }; /* buffer should be large enough */
+  uint8_t destlen = 0;
+
+  /* encoded numbers */
+  uint8_t srcbuf[20] = { 0 }; /* buffer should be large enough */
+  uint8_t srclen = 0;
+
+  uint8_t encoding = 0xa0; /* Single ASN.1-type */
+  uint8_t encoding_len = 0;
+#define MAX_DIALOGUE_PDU_LEN	64
+  uint8_t map_dialogue_pdu[MAX_DIALOGUE_PDU_LEN] = { 0 };
+  uint8_t map_dialogue_pdu_len = 0;
+  asn_enc_rval_t er = { 0 };  /* Encoder return value */
+
+#define MAX_DIRECT_REFERENCE_LEN	16
+  uint8_t direct_reference_buf[MAX_DIRECT_REFERENCE_LEN] = { 0 };
+  uint8_t direct_reference_buf_len = 0;
+  uint8_t *user_information_buf = NULL;;
+  uint8_t i = 0;
+  struct user_information *uinfo_struct = NULL;
+
+  OCTET_STRING_t destref = { 0 };
+  OCTET_STRING_t origref = { 0 };
+
+  OBJECT_IDENTIFIER_t direct_reference = { 0 };
+
+  MAP_DialoguePDU_t mdial = { 0 };
+
+  ext = MYCALLOC(1, sizeof(*ext));
+  dial = &ext->dialog;
+
+  OBJECT_IDENTIFIER_set_arcs(&ext->oid, &diag_ref_struct,
+      sizeof(diag_ref_struct[0]),
+      ARRAY_SIZE(diag_ref_struct));
+
+  /* build MAP Dialogue (map_open) */
+  //mdial = MYCALLOC(1, sizeof(*mdial));
+  mdial.present = MAP_DialoguePDU_PR_map_open;
+  map_open = &mdial.choice.map_open;
+
+  encode_msisdn(destnum, strlen(destnum), destbuf, &destlen);
+  if (!destlen) goto err;
+  map_open->destinationReference = &destref;
+  map_open->destinationReference->buf = destbuf;
+  map_open->destinationReference->size = destlen;
+
+  encode_msisdn(srcnum, strlen(srcnum), srcbuf, &srclen);
+  if (!srclen) goto err;
+  map_open->originationReference = &origref;
+  map_open->originationReference->buf = srcbuf;
+  map_open->originationReference->size = srclen;
+
+  er = der_encode_to_buffer(&asn_DEF_MAP_DialoguePDU, &mdial, map_dialogue_pdu, sizeof(map_dialogue_pdu));
+  if (er.encoded > 0) {
+    map_dialogue_pdu_len = er.encoded;
+    //DTRACE("Encoded successfully, %ld bytes\n", er.encoded);
+    //hexdump(map_dialogue_pdu, map_dialogue_pdu_len);
+    encoding_len = map_dialogue_pdu_len;
+  } else {
+    CRITICAL("Failed to encode map dialogue pdu Data\n");
+    goto err;
+  }
+
+
+  memset(&direct_reference, 0, sizeof(direct_reference));
+  OBJECT_IDENTIFIER_set_arcs(&direct_reference,
+      &map_dialogue_as_oid,
+      sizeof(map_dialogue_as_oid[0]),
+      ARRAY_SIZE(map_dialogue_as_oid));
+  er = der_encode_to_buffer(&asn_DEF_OBJECT_IDENTIFIER, &direct_reference, direct_reference_buf, sizeof(direct_reference_buf));
+  if (er.encoded > 0) {
+    direct_reference_buf_len = er.encoded;
+    //DTRACE("Encoded successfully, %ld bytes\n", er.encoded);
+    //hexdump(direct_reference_buf, direct_reference_buf_len);
+  } else {
+    DTRACE("Failed to encode object identifier Data\n");
+    goto err;
+  }
+
+#define MAX_USER_INFO_LEN		64
+  user_information_buf = MYCALLOC(1, MAX_USER_INFO_LEN);
+  i = 2;
+  memcpy(user_information_buf+i, direct_reference_buf, direct_reference_buf_len);
+  i += direct_reference_buf_len;
+  user_information_buf[i++] = encoding;
+  user_information_buf[i++] = encoding_len;
+  memcpy(user_information_buf+i, map_dialogue_pdu, map_dialogue_pdu_len);
+  i += map_dialogue_pdu_len;
+  user_information_buf[0] = 0x28; /* FIXME: hack */
+  user_information_buf[1] = i-2; /* FIXME: hack */
+
+  //DTRACE("user_information_buf length: %d\n", i);
+  //hexdump(user_information_buf, i);
+
+  /* here comes TCAP part */
+  dial->present = DialoguePDU_PR_dialogueRequest;
+  aarq = &dial->choice.dialogueRequest;
+  aarq->protocol_version = &dial_version1;
+  OBJECT_IDENTIFIER_set_arcs(&aarq->application_context_name,
+      &networkUnstructuredSsContext_v2,
+      sizeof(networkUnstructuredSsContext_v2[0]),
+      ARRAY_SIZE(networkUnstructuredSsContext_v2));
+
+  /* uinf == * ANY_t */
+  uinf = MYCALLOC(1, sizeof(*uinf));
+  uinf->buf = user_information_buf;
+  uinf->size = i;
+
+  uinfo_struct = MYCALLOC(1, sizeof(*uinfo_struct));
+  ASN_SEQUENCE_ADD(&uinfo_struct->list, uinf);
+  uinfo_struct->list.free = map_user_information_free;
+  //xer_fprint(stdout, &asn_DEF_DialoguePDU, dial);
+
+  aarq->user_information = uinfo_struct;
+
+  return ext;
+err:
+  ussd_dialogue_request_free(ext);
+  ext = NULL;
+  /*
+  if (uinfo) MYFREE(uinfo);
+  if (uinf) MYFREE(uinf);
+
+  if (map_open->destinationReference) MYFREE(map_open->destinationReference);
+  if (map_open->originationReference) MYFREE(map_open->originationReference);
+  if (mdial) MYFREE(mdial);
+  */
+
+  return ext;
+}
+
+void ussd_dialogue_request_free(ExternalPDU_t *ext)
+{
+  FTRACE();
+
+  DialoguePDU_t *dial = NULL;
+  AARQ_apdu_t *aarq = NULL;
+  struct user_information *uinfo_struct = NULL;
+
+  if (ext) {
+    dial = &ext->dialog;
+    if (dial->present == DialoguePDU_PR_dialogueRequest) {
+      aarq = &dial->choice.dialogueRequest;
+      uinfo_struct = aarq->user_information;
+      if (uinfo_struct) {
+	asn_set_empty(&uinfo_struct->list); /* this will call the free function set (map_user_information_free) */
+	MYFREE(uinfo_struct);
+      }
+    }
+    MYFREE(ext);
+  }
+}
+
+/* construct DialoguePDU wwith AARE */
+ExternalPDU_t *ussd_dialogue_response_accepted(void)
+{
+  FTRACE();
+
+  AARE_apdu_t *aare = NULL;
+  ExternalPDU_t *ext = NULL;
+  DialoguePDU_t *dial = NULL;
+
+  ext = MYCALLOC(1, sizeof(*ext));
+  dial = &ext->dialog;
+
+  OBJECT_IDENTIFIER_set_arcs(&ext->oid, &diag_ref_struct,
+      sizeof(diag_ref_struct[0]),
+      ARRAY_SIZE(diag_ref_struct));
+
+  //memset(dial, 0, sizeof(*dial));
+  dial->present = DialoguePDU_PR_dialogueResponse;
+
+  aare = &dial->choice.dialogueResponse;
+  aare->protocol_version = &dial_version1;
+  OBJECT_IDENTIFIER_set_arcs(&aare->application_context_name,
+      &networkUnstructuredSsContext_v2,
+      sizeof(networkUnstructuredSsContext_v2[0]),
+      ARRAY_SIZE(networkUnstructuredSsContext_v2));
+  asn_long2INTEGER(&aare->result, Associate_result_accepted); /* should call ASN_FREE_INTEGER(ptr) when done */
+  aare->result_source_diagnostic.present = Associate_source_diagnostic_PR_dialogue_service_user;
+  asn_long2INTEGER(&aare->result_source_diagnostic.choice.dialogue_service_user, dialogue_service_user_null); /* should call ASN_FREE_INTEGER(ptr) when done */
+  //xer_fprint(stdout, &asn_DEF_DialoguePDU, dial);
+
+  return ext;
+}
+
+void ussd_dialogue_response_free(ExternalPDU_t *ext)
+{
+  FTRACE();
+
+  AARE_apdu_t *aare = NULL;
+  DialoguePDU_t *dial = NULL;
+
+  if (ext) {
+    dial = &ext->dialog;
+    aare = &dial->choice.dialogueResponse;
+    ASN_FREE_INTEGER(&aare->result);
+    ASN_FREE_INTEGER(&aare->result_source_diagnostic.choice.dialogue_service_user);
+    MYFREE(ext);
+  }
+}

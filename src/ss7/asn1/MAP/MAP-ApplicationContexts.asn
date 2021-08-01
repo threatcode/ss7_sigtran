@@ -1,0 +1,583 @@
+-- The following ASN.1 module defines MAP application-contexts.
+-- 3GPP TS 29.002 V11.5.0 (2013-01)
+MAP-ApplicationContexts {
+   itu-t identified-organization (4) etsi (0) mobileDomain (0)
+   gsm-Network (1) modules (3) map-ApplicationContexts (2) version11 (11)}
+
+DEFINITIONS
+
+::=
+
+BEGIN
+
+
+-- EXPORTS everything
+
+
+IMPORTS
+   gsm-NetworkId,
+   ac-Id
+      FROM MobileDomainDefinitions {
+         itu-t (0) identified-organization (4) etsi (0) mobileDomain (0)
+         mobileDomainDefinitions (0) version1 (1)}
+   networkLocUpContract-v2,
+   networkLocUpContract-v3,
+   locationCancellationContract-v3,
+   roamingNumberEnquiryContract-v2,
+   roamingNumberEnquiryContract-v3,
+   locationInfoRetrievalContract-v2,
+   locationInfoRetrievalContract-v3,
+   callControlTransferContract-v3,
+   callControlTransferContract-v4,
+   resetContract-v2,
+   resetContract-v3,
+   handoverControlContract-v2,
+   handoverControlContract-v3,
+   imsiRetrievalContract-v2,
+   equipmentMngtContract-v3,
+   equipmentMngtContract-v2,
+   infoRetrievalContract-v3,
+   infoRetrievalContract-v2,
+   interVlrInfoRetrievalContract-v3,
+   interVlrInfoRetrievalContract-v2,
+   subscriberDataMngtContract-v2,
+   subscriberDataMngtContract-v3,
+   tracingContract-v2,
+   tracingContract-v3,
+   networkFunctionalSsContract-v2,
+   networkFunctionalSsContract-v1,
+   networkUnstructuredSsContract-v2,
+   shortMsgGatewayContract-v2,
+   shortMsgGatewayContract-v3,
+   shortMsgMO-RelayContract-v2,
+   shortMsgMO-RelayContract-v3,
+   shortMsgAlertContract-v1,
+   shortMsgAlertContract-v2,
+   mwdMngtContract-v2,
+   mwdMngtContract-v3,
+   shortMsgMT-RelayContract-v2,
+   shortMsgMT-RelayContract-v3,
+   msPurgingContract-v2,
+   msPurgingContract-v3,
+   subscriberInfoEnquiryContract-v3,
+   anyTimeInfoEnquiryContract-v3,
+   groupCallControlContract-v3,
+   groupCallInfoRetControlContract-v3,
+   gprsLocationUpdateContract-v3,
+   gprsLocationInfoRetrievalContract-v3,
+   gprsLocationInfoRetrievalContract-v4,
+   failureReportContract-v3,
+   gprsNotifyContract-v3,
+   ss-InvocationNotificationContract-v3,
+   reportingContract-v3,
+   callCompletionContract-v3,
+   locationSvcGatewayContract-v3,
+   locationSvcEnquiryContract-v3,
+   istAlertingContract-v3,
+   serviceTerminationContract-v3,
+   mm-EventReportingContract-v3,
+   anyTimeInfohandlingContract-v3,
+   subscriberDataModificationNotificationContract-v3,
+   authenticationFailureReportContract-v3,
+   resourceManagementContract-v3,
+   shortMsgMT-Relay-VGCS-Contract-v3,
+   vcsgLocationUpdateContract-v3,
+   vcsgLocationCancellationContract-v3,
+   sIWFSAllocationContract-v3
+FROM MAP-Contracts {
+   itu-t identified-organization (4) etsi (0) mobileDomain (0)
+   gsm-Network (1) modules (3) map-Contracts (99) version11 (11)}
+;
+
+
+map-ac  OBJECT IDENTIFIER ::= {gsm-NetworkId ac-Id}
+
+networkLocUpContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is VLR
+    CONTRACT                    networkLocUpContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac networkLocUp(1) version2(2)}
+}
+
+networkLocUpContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is VLR
+    CONTRACT                    networkLocUpContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac networkLocUp(1) version3(3)}
+}
+
+locationCancellationContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR
+    CONTRACT                    locationCancellationContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac locationCancel(2) version2(2)} }
+
+locationCancellationContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR
+    CONTRACT                    locationCancellationContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac locationCancel(2) version3(3)} }
+
+roamingNumberEnquiryContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR if Initiator is HLR
+    CONTRACT                    roamingNumberEnquiryContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac roamingNbEnquiry(3) version2(2)} }
+
+roamingNumberEnquiryContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR if Initiator is HLR
+    CONTRACT                    roamingNumberEnquiryContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac roamingNbEnquiry(3) version3(3)} }
+
+locationInfoRetrievalContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR or NPLR if Initiator is GMSC
+    -- Responder is HLR if Initiator is gsmSCF
+    CONTRACT                    locationInfoRetrievalContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac locInfoRetrieval(5) version2(2)} }
+
+locationInfoRetrievalContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR or NPLR if Initiator is GMSC
+    -- Responder is HLR if Initiator is gsmSCF
+    CONTRACT                    locationInfoRetrievalContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac locInfoRetrieval(5) version3(3)} }
+
+callControlTransferContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is GMSC if Initiator is VMSC
+    CONTRACT                    callControlTransferContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac callControlTransfer(6) version3(3)} }
+
+callControlTransferContext-v4 APPLICATION-CONTEXT ::= {
+    -- Responder is GMSC if Initiator is VMSC
+    CONTRACT                    callControlTransferContract-v4
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac callControlTransfer(6) version4(4)} }
+
+resetContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR or CSS
+    CONTRACT                    resetContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac reset(10) version2(2)} }
+
+resetContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR or CSS
+    CONTRACT                    resetContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac reset(10) version3(3)} }
+
+handoverControlContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is MSCB if Initiator is MSCA
+    CONTRACT                    handoverControlContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac handoverControl(11) version2(2)} }
+
+handoverControlContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is MSCB if Initiator is MSCA
+    CONTRACT                    handoverControlContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac handoverControl(11) version3(3)} }
+
+imsiRetrievalContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is VLR
+    CONTRACT                    imsiRetrievalContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac imsiRetrieval(26) version2(2)} }
+
+equipmentMngtContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is EIR if Initiator is MSC
+    -- Responder is EIR if Initiator is SGSN
+    CONTRACT                    equipmentMngtContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac equipmentMngt(13) version3(3)} }
+
+equipmentMngtContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is EIR if Initiator is MSC
+    -- Responder is EIR if Initiator is SGSN
+    CONTRACT                    equipmentMngtContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac equipmentMngt(13) version2(2)} }
+
+infoRetrievalContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is VLR
+    -- Responder is HLR if Initiator is SGSN
+    CONTRACT                    infoRetrievalContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac infoRetrieval(14) version3(3)} }
+
+infoRetrievalContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is VLR
+    -- Responder is HLR if Initiator is SGSN
+    CONTRACT                    infoRetrievalContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac infoRetrieval(14) version2(2)} }
+
+infoRetrievalContext-v1 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is VLR
+    -- Responder is HLR if Initiator is SGSN
+    CONTRACT                    infoRetrievalContract-v1
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac infoRetrieval(14) version1(1)} }
+
+interVlrInfoRetrievalContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR if Initiator is VLR
+    CONTRACT                    interVlrInfoRetrievalContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac interVlrInfoRetrieval(15) version3(3)} }
+
+interVlrInfoRetrievalContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR if Initiator is VLR
+    CONTRACT                    interVlrInfoRetrievalContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac interVlrInfoRetrieval(15) version2(2)} }
+
+subscriberDataMngtContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR or CSS
+    CONTRACT                    subscriberDataMngtContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac subscriberDataMngt(16) version2(2)} }
+
+subscriberDataMngtContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR or CSS
+    CONTRACT                    subscriberDataMngtContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac subscriberDataMngt(16) version3(3)} }
+
+tracingContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR
+    CONTRACT                    tracingContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac tracing(17) version2(2)} }
+
+tracingContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR
+    CONTRACT                    tracingContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac tracing(17) version3(3)} }
+
+networkFunctionalSsContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR, Initiator is VLR
+    CONTRACT                    networkFunctionalSsContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac networkFunctionalSs(18) version2(2)} }
+
+networkFunctionalSsContext-v1 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR, Initiator is VLR
+    CONTRACT                    networkFunctionalSsContract-v1
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac networkFunctionalSs(18) version1(1)} }
+
+networkUnstructuredSsContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR, Initiator is VLR
+    -- Responder is VLR, Initiator is HLR
+    -- Responder is gsmSCF, Initiator is HLR
+    -- Responder is HLR, Initiator is gsmSCF
+    -- Responder is HLR, Initiator is HLR
+    CONTRACT                    networkUnstructuredSsContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac networkUnstructuredSs(19) version2(2)} }
+
+shortMsgGatewayContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is GMSC
+    CONTRACT                    shortMsgGatewayContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac shortMsgGateway(20) version2(2)} }
+
+shortMsgGatewayContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is GMSC
+    CONTRACT                    shortMsgGatewayContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac shortMsgGateway(20) version3(3)} }
+
+shortMsgMO-RelayContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is IWMSC if Initiator is MSC
+    -- Responder is IWMSC if Initiator is SGSN
+    CONTRACT                    shortMsgMO-RelayContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac shortMsgMO-Relay(21) version2(2)} }
+
+shortMsgMO-RelayContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is IWMSC if Initiator is MSC
+    -- Responder is IWMSC if Initiator is SGSN
+    CONTRACT                    shortMsgMO-RelayContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac shortMsgMO-Relay(21) version3(3)} }
+
+shortMsgAlertContext-v1 APPLICATION-CONTEXT ::= {
+    -- Responder is IWMSC if Initiator is HLR
+    CONTRACT                    shortMsgAlertContract-v1
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac shortMsgAlert(23) version1(1)} }
+
+shortMsgAlertContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is IWMSC if Initiator is HLR
+    CONTRACT                    shortMsgAlertContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac shortMsgAlert(23) version2(2)} }
+
+mwdMngtContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is SGSN
+    -- Responder is HLR if Initiator is VLR
+    CONTRACT                    mwdMngtContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac mwdMngt(24) version2(2)} }
+
+mwdMngtContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is SGSN
+    -- Responder is HLR if Initiator is VLR
+    CONTRACT                    mwdMngtContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac mwdMngt(24) version3(3)} }
+
+shortMsgMT-RelayContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is MSC or SGSN if Initiator is GMSC
+    CONTRACT                    shortMsgMT-RelayContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac shortMsgMT-Relay(25) version2(2)} }
+
+shortMsgMT-RelayContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is MSC or SGSN if Initiator is GMSC
+    CONTRACT                    shortMsgMT-RelayContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac shortMsgMT-Relay(25) version3(3)} }
+
+msPurgingContext-v2 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is VLR
+    -- Responder is HLR if Initiator is SGSN
+    CONTRACT                    msPurgingContract-v2
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac msPurging(27) version2(2)} }
+
+msPurgingContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is VLR
+    -- Responder is HLR if Initiator is SGSN
+    CONTRACT                    msPurgingContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac msPurging(27) version3(3)} }
+
+subscriberInfoEnquiryContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR
+    CONTRACT                    subscriberInfoEnquiryContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac subscriberInfoEnquiry(28) version3(3)} }
+
+anyTimeInfoEnquiryContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR or GMLC or NPLR if Initiator is gsmSCF
+    CONTRACT                    anyTimeInfoEnquiryContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac anyTimeInfoEnquiry(29) version3(3)} }
+
+groupCallControlContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is relay MSC if Initiator is anchor MSC
+    CONTRACT                    groupCallControlContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac groupCallControl(31) version3(3)} }
+
+groupCallInfoRetControlContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is group call serving MSC if Initiator is visited MSC
+    -- Responder is visited MSC if Initiator is group call serving MSC
+    CONTRACT                    groupCallInfoRetControlContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac groupCallInfoRetrieval(45) version3(3)} }
+
+gprsLocationUpdateContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is SGSN
+    CONTRACT                    gprsLocationUpdateContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac gprsLocationUpdate(32) version3(3)} }
+
+gprsLocationInfoRetrievalContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is GGSN
+    CONTRACT                    gprsLocationInfoRetrievalContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac gprsLocationInfoRetrieval(33) version3(3)} }
+
+gprsLocationInfoRetrievalContext-v4 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is GGSN
+    CONTRACT                    gprsLocationInfoRetrievalContract-v4
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac gprsLocationInfoRetrieval(33) version4(4)} }
+
+failureReportContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is GGSN
+    CONTRACT                    failureReportContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac failureReport(34) version3(3)} }
+
+gprsNotifyContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is GGSN if Initiator is HLR
+    CONTRACT                    gprsNotifyContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac gprsNotify(35) version3(3)} }
+
+ss-InvocationNotificationContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is gsmSCF, Initiator is MSC
+    -- Responder is gsmSCF, Initiator is HLR
+    CONTRACT                    ss-InvocationNotificationContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac ss-InvocationNotification(36) version3(3)} }
+
+reportingContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR if Initiator is HLR
+    -- Responder is HLR if Initiator is VLR
+    CONTRACT                    reportingContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac reporting(7) version3(3)} }
+
+callCompletionContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is VLR
+    CONTRACT                    callCompletionContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac callCompletion(8) version3(3)} }
+
+locationSvcGatewayContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is GMLC
+    CONTRACT                    locationSvcGatewayContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac locationSvcGateway(37) version3(3)} }
+
+locationSvcEnquiryContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is MSC or SGSN if Initiator is GMLC
+    -- Responder is GMLC if Initiator is MSC
+    -- Responder is GMLC if Initiator is SGSN
+    CONTRACT                    locationSvcEnquiryContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac locationSvcEnquiry(38) version3 (3)} }
+
+istAlertingContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is VMSC
+    -- Responder is HLR if Initiator is GMSC
+    CONTRACT                    istAlertingContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac alerting(4) version3(3)} }
+
+serviceTerminationContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is VMSC or GMSC if Initiator is HLR
+    CONTRACT                    serviceTerminationContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac serviceTermination(9) version3(3)} }
+
+mm-EventReportingContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is gsmSCF, Initiator is VLR
+    CONTRACT                    mm-EventReportingContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac mm-EventReporting(42) version3(3)} }
+
+anyTimeInfohandlingContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is gsmSCF
+    CONTRACT                    anyTimeInfohandlingContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac anyTimeInfoHandling(43) version3(3)} }
+
+subscriberDataModificationNotificationContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is gsmSCF, Initiator is HLR
+    CONTRACT                    subscriberDataModificationNotificationContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac subscriberDataModificationNotification(22) version3(3)} }
+
+authenticationFailureReportContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is HLR if Initiator is VLR
+    -- Responder is HLR if Initiator is SGSN
+    CONTRACT                    authenticationFailureReportContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac authenticationFailureReport(39) version3(3)} }
+
+resourceManagementContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is VMSC if Initiator is GMSC
+    CONTRACT                    resourceManagementContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac resourceManagement(44) version3(3)} }
+
+shortMsgMT-Relay-VGCS-Context-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is MSC if Initiator is SMS-GMSC
+    CONTRACT                    shortMsgMT-Relay-VGCS-Contract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac shortMsgMT-Relay-VGCS(41) version3(3)} }
+
+vcsgLocationUpdateContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is CSS if Initiator is VLR or SGSN
+    CONTRACT                    vcsgLocationUpdateContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac vcsgLocationUpdate(46) version3(3)} }
+
+vcsgLocationCancellationContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is VLR or SGSN if Initiator is CSS
+    CONTRACT                    vcsgLocationCancellationContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac vcsgLocationCancel(47) version3(3)} }
+
+sIWFSAllocationContext-v3 APPLICATION-CONTEXT ::= {
+    -- Responder is SIWF if Initiater is VMSC
+    CONTRACT                    sIWFSAllocationContract-v3
+    DIALOGUE MODE               structured
+    ABSTRACT SYNTAXES           dialogue-abstract-syntax
+    APPLICATION CONTEXT NAME    {map-ac sIWFSAllocation (12) version3(3)} }
+
+END

@@ -1,0 +1,35 @@
+/*
+ * mph.h
+ */
+#ifndef _MPH_H_
+#define _MPH_H_
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
+/* I don't want cmph_time.h to be included,
+ * it makes problems with the -ansi param
+ */
+#define __CMPH_TIME_H__
+#include <cmph.h>
+typedef cmph_t mph_t;
+
+typedef struct {
+  char *key;
+  size_t klen;
+} mph_key_t;
+
+typedef struct {
+  mph_t *hash;
+  size_t hlen; /* hash size */
+  mph_key_t *keys;
+} mph_tab_t;
+
+mph_tab_t *mph_load_file(const char *file);
+mph_key_t *mph_search_key(mph_tab_t *hash, const char *key, size_t klen);
+mph_key_t *mph_search_id(mph_tab_t *hash, unsigned int id);
+void mph_unload(mph_tab_t *htab);
+
+
+#endif

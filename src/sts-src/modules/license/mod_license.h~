@@ -1,0 +1,13 @@
+/*
+ * mod_license.h
+ */
+#ifndef __MOD_LICENSE_H__
+#define __MOD_LICENSE_H__
+
+#define _GNU_SOURCE
+
+#include "module.h"
+
+typedef hook_t license_session_t;
+
+#endif /* !__MOD_LICENSE_H__ */

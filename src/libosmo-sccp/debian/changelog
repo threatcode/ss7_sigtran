@@ -1,0 +1,356 @@
+libosmo-sccp (1.2.0) unstable; urgency=medium
+
+  [ Kira Obrezkova ]
+  * systemd: This patch adds Documentation field to the systemd service file
+
+  [ Alexander Couzens ]
+  * osmo_sccp_simple_client(): use sccp instance index 0 instead of 1
+  * sccp_user: correct comment for osmo_sccp_simple_client
+
+  [ Pau Espin Pedrol ]
+  * ss7: Do not queue messages if stream is not connected
+  * Fix typo in log message of recent commit
+  * m3ua: Log incorrect selected AS
+  * Defer xua server binding until exit of VTY node
+  * ss7: Support multiple addresses in SCTP connections
+  * ss7: Log local and remote address set upon ASP restart
+  * tests: Introduce test for multi-homing STP features
+  * cosmetic: ss7: Fix trailing whitespace
+  * vty: Fix write-config of local-ip and remote-ip commands
+  * cosmetic: Fix trailing whitespace
+  * ss7: Fix osmo_ss7_asp_peer_snprintf() output if peer has zero IP addr assigned
+  * ss7: Fix finding asp by socket addr if local ip addr is 0.0.0.0
+  * ss7: Fix finding asp by socket addr if it has no remote hosts configured
+  * vty: ss7: Make sure ASP has at least INET_ANY addr set if not configured in VTY
+  * vty: Print traffic mode during show cs7 instance as
+  * ss7: Set default traffic-mode to override
+  * ss7: Implement AS traffic mode loadshare using round robin ASP selection
+  * ss7: Set configured AS traffic mode when sending Routing Key Register msg
+  * ss7: Only override traffic mode from recv REG REQ if not set by VTY
+  * xua: Verify all route ctxs received in ASPAC msg
+  * ss7: Set Traffic mode and Route Ctx in ASPAC ACK msg if known
+  * xua: Allow traffic mode set by peer if not set by VTY
+  * xua: Fix private function name
+  * xua: loadshare: select ASP for tx only if active
+  * xua: Reset AS traffic mode set by peer during shutdown
+  * xua: Select only active ASPs during tx in Override traffic mode
+  * xua: On new ASPAC, set and notify other ASPs as inactive
+  * ss7: Set ASP default remote addr to 127.0.0.1 if none set in VTY
+  * xua: Don't send NOTIFY messages to IPA ASPs
+  * xua: ipa_asp_fsm: Allow moving ASP to inactive state
+  * xua: ipa_asp_fsm: Allow receiving IPA ID ACK before IPA ID RESP
+  * ss7: Improve log formatting during ASP restart
+  * ss7: Set correct local addr and port during dynamic ASP creation
+  * xua: Avoid multiline log in xua_msg_dump()
+  * xua: Implement traffic mode broadcast
+  * debian: Drop patches directory containing old patch not longer required
+
+  [ Harald Welte ]
+  * Move definition of LOGSS7() to header file; add LOGPAS() like LOGPASP()
+  * Use LOGPAS / LOGPASP in favor of generic LOGSS7 where applicable
+  * ipa: Don't send non-SCCP data over IPA/SCCPlite
+  * ipa: Fix crash when parsing of received IPA SCCP message fails
+  * ipa: VTY config option to explicitly enable/disable SCCP patching
+  * Don't permit routing-context != 0 for IPA peers
+  * cosmetic: Document why IPA uses hard-coded routing-context 0
+  * Log correct protocol during xua_accept_cb()
+  * xua_rkm: Print NOTICE log message if registration for wrong rctx
+  * xua_rkm: Don't permit de-registration of rctx with ASP active
+  * xua_asp_fsm: Don't send M3UA ERR and then send ASPAC_ACK
+  * M3UA: Reject ASP activation + RKM registration for incompatible traffic-mode
+  * introduce public enum osmo_ss7_asp_role for ASP/SG/IPSP
+  * Allow ASP role to be configured
+  * vty: Permit configuration of ASPs in SCTP client mode
+  * Don't forget to store the sctp-role during writing config file
+  * osmo_ss7: Add osmo_ss7_asp_find()
+  * asp: Don't override ASP and SCTP role when re-entering asp node
+  * fix generating asp-role that can be parsed when re-opening config file
+  * Skip dynamic ASPs when writing the list of ASPs in an AS
+  * check for osmo_fsm_register() failures and propagate error
+  * xua_asp_fsm: Ensure xUA client includes traffic-mode if configured
+  * xua_asp_fsm: Ensure xUA client includes routing contexts in ASPAC/ASPIA
+  * stp: exit(2) on unsupported positional arguments on command line
+  * ASP FSM: Permit DOWN -> DOWN "transition"
+  * ASP: Stop re-transmitting un-acknowledged messages on SCTP down event
+
+  [ Vadim Yanitskiy ]
+  * osmo_ss7.c: cosmetic: fix typo in xua_accept_cb()
+  * osmo_ss7.c: fix copy-paste error in xua_accept_cb()
+  * osmo_ss7.c: fix xua_accept_cb(): properly assign role
+  * tests/sccp/Makefile.am: use sccp.o from $(top_builddir)
+  * osmo_ss7_vty.c: implement 'active' filter for show_cs7_as_cmd
+
+  [ Oliver Smith ]
+  * gitignore: add various generated doc files
+  * osmoappdesc.py, tests: switch to python 3
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Thu, 02 Jan 2020 21:24:11 +0100
+
+libosmo-sccp (1.1.0) unstable; urgency=medium
+
+  [ Max ]
+  * Don't use deprecated osmo_stream_cli_open2()
+  * osmo_ss7.c: fix typo
+  * OsmoSTP: enable statsd support
+
+  [ Neels Hofmeyr ]
+  * debug log typo fix in sccp_scoc.c
+  * improve logging for rejected AS in xua_rkm.c
+  * add caller-owns-msgb variant osmo_sccp_user_sap_down_nofree()
+  * add osmo_sccp_addr_cmp(), osmo_sccp_addr_ri_cmp()
+
+  [ Harald Welte ]
+  * vty: Ensure to properly save route pointcode and mask when writing
+  * Store + show remote ip/port in dynamically created ASPs
+  * Fix output of route destination in 'show ss7 instance <0-15> route'
+  * sccp_scoc: Add more comments describing conn_id and local_ref members
+  * stp: Ensure telnet uses STP talloc context, not NULL context
+
+  [ Oliver Smith ]
+  * Cosmetic: sccp_scoc: fix local reference comments
+  * sccp_scoc: move sccp_find_user() up
+  * sccp_scoc: conn_create{,_id}() user arg, not inst
+  * debian: create -doc subpackage with pdf manuals
+  * contrib/jenkins.sh: run "make maintainer-clean"
+  * contrib/jenkins.sh: "maintainer-clean" after "publish"
+
+  [ Holger Hans Peter Freyther ]
+  * xudt: Implement address and data extraction
+  * udts/xudts: Attempt to implement unitdata service parsing
+
+  [ Vadim Yanitskiy ]
+  * osmo-stp: register VTY commands for talloc context introspection
+  * osmo-stp: expose root talloc context to the VTY code
+
+  [ Daniel Willmann ]
+  * manuals: Add script to regenerate vty/counter documentation
+  * manuals: Update vty documentation
+
+  [ Kira Obrezkova ]
+  * This patch fixes typos on which Lintian complains
+
+  [ Pau Espin Pedrol ]
+  * Remove undefined param passed to {logging,osmo_stats}_vty_add_cmds
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Wed, 07 Aug 2019 21:17:59 +0200
+
+libosmo-sccp (1.0.0) unstable; urgency=medium
+
+  [ Harald Welte ]
+  * Migrate from ipa_ccm_idtag_parse() to ipa_ccm_id_resp_parse()
+  * debian/rules: Don't overwrite .tarball-version
+  * Revert "Install systemd services with autotools"
+  * osmo-stp.cfg: Ensure example config is well-formed
+  * First step towards an OsmoSTP manual
+  * STP: Update vty reference XML file
+  * vty-ref: Update URI of docbook 5.0 schema
+
+  [ Pau Espin Pedrol ]
+  * sscp_scrc: Fix memleak of xua_msg when handing it to scrc_rx_mtp_xfer_ind_xua
+  * xua_rkm: Fix xua_msg memleank in handle_rkey_reg_resp
+  * Install systemd services with autotools
+  * Install systemd services with autotools
+  * debian/rules: Remove duplicated override_dh_auto_test section
+  * Install sample cfg file to /etc/osmocom
+  * debian: Document why enable-static is used in dh_auto_configure
+
+  [ Neels Hofmeyr ]
+  * ipa_asp_fsm: init: expect IPA ID ACK, not GET
+  * cosmetic: sccp_scoc.c: fix timers definition units
+  * drop inaccurate comment from osmo_ss7_vty.c
+  * vty: fix 'show asp' from within 'asp' node
+  * allow less characters for SCCP address book entries
+  * add tests/vty: VTY UI transcript testing
+  * sccp_vty: define SCCP_STR once
+  * vty: tweak two printed strings
+  * vty: install 'show cs7' for sccp addrs on _ve nodes
+  * cosmetic: allocate ss7->sccp in one common function
+  * sccp_vty: fix doc strings for show ... ssn,connections
+  * make SCCP timers configurable
+  * build: move include/{mtp,sccp} to include/osmocom/
+  * osmo-stp: add SCCP related VTY commands
+  * Importing history from osmo-gsm-manuals.git
+  * OsmoSTP: update VTY reference
+  * stp: update vty reference
+  * stp: update vty reference with added SCCP commands
+
+  [ Stefan Sperling ]
+  * skip simple-client default as/asp when saving VTY config
+  * return error code from xua_srv_conn_cb() if conn is freed
+  * fix ipa_asp_fsm down state transition
+
+  [ Max ]
+  * Make pointcode width function public
+  * Log ip:port for created SS7 server
+  * SS7: safeguard against wrong number of pointcode component
+
+  [ Oliver Smith ]
+  * build manuals moved here from osmo-gsm-manuals.git
+  * Fix DISTCHECK_CONFIGURE_FLAGS override
+  * contrib/jenkins.sh: build and publish manuals
+  * contrib: fix makedistcheck with disabled systemd
+
+ -- Harald Welte <laforge@gnumonks.org>  Sun, 20 Jan 2019 11:33:22 +0100
+
+libosmo-sccp (0.10.0) unstable; urgency=medium
+
+  [ Harald Welte ]
+  * debian/control: match build dependency versions with configure.ac
+  * osmo_ss7: Register 5000 as default port for IPA/SCCPlite
+  * Introduce osmo_ss7_register_rx_unknown_cb() for unknown PPID/StreamID
+
+  [ Stefan Sperling ]
+  * free msgb for primitive allocated in lm_timer_cb() of lm_fsm
+  * fix infinite recursion with routing by global title
+  * fix use after free in osmo_sccp_simple_server_add_clnt()
+  * make it possible to pass parameters to m3ua_example
+  * rename m3ua_example to sccp_demo_user
+  * sccp_demo_user: use point code 23 for server and 1 for client
+  * remove unused -p option from getopt() call in sccp_demo_user
+
+  [ Pau Espin Pedrol ]
+  * tests: xua_test: Fix use of wrong buffer for dest addr
+  * tests: xua_test: Fix array len computation
+  * build: Install example cfg files
+  * debian: Package installed example doc files
+
+  [ Neels Hofmeyr ]
+  * fix memleak in ipa_rx_msg_sccp
+  * cosmetic: sccp2sua.c: log the IEI for parsed SCCP addr
+  * add osmo_xua_msg_tall_ctx_init()
+  * fix two memleaks in ipa_rx_msg_sccp()
+  * comment: explain xua_msg free in m3ua_rx_xfer()
+
+  [ Daniel Willmann ]
+  * git-version-gen: Don't check for .git directory
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Fri, 27 Jul 2018 18:45:39 +0200
+
+libosmo-sccp (0.9.0) unstable; urgency=medium
+
+  [ Neels Hofmeyr ]
+  * jenkins: use osmo-clean-workspace.sh before and after build
+  * vty: skip installing cmds now always installed by default
+  * add osmo_sccp_inst_addr_name(), a variant of osmo_sccp_addr_name()
+  * sccp vty: be fatal for addressbook entry errors
+  * add --enable-sanitize config option
+  * sccp_test: sanitize: fix msgb mem leaks
+  * sccp_test: sanitize: don't memcmp NULL pointers
+  * xua_test: sanitize: fix msgb leak
+  * osmo_sccp_addr_name / _dump: drop 'NO_GT' output
+  * typo: osmo-stp main: 'Erro'
+  * add osmo_sccp_user_name()
+  * add osmo_ss7_route_name()
+  * cosmetic: hmrt_message_for_routing(): use osmo_ss7_route_name()
+  * error log: sccp_scoc.c: log failure to create/resolve conn_id
+  * configure: add --enable-werror
+  * jenkins.sh: use --enable-werror configure flag, not CFLAGS
+
+  [ Max ]
+  * Fix typo in .deb dependency
+  * Enable sanitize for CI tests
+  * SS7: clarify handling of stream opening error
+
+  [ Harald Welte ]
+  * xua: Write 'local-ip' only if non-NULL
+  * vty: Make sure 'point-code override dpc' is saved with correct indent
+  * ipa: Fix setting of OPC/DPC based on routing-context + override
+  * ipa: Fix endianness of pseud-M3UA header
+  * initialize msg->l2h in sccp_msgb_alloc()
+  * ipa: Patch DPC/OPC information into SCCP Calling/Called Party Address
+  * ipa: Automatically create / destroy route on IPA connect/disconnect
+  * osmo-stp: Align prompt formatting with other Osmocom programs
+  * STP: Add osmoappdesc.py
+  * debian/copyright: Fix upstream-name
+  * Add SPDX-License-Identifier + missing copyright statements
+  * Add "show cs7 (m3ua}sua}ipa)" command to show xUA servers
+  * xua_as[p]_fsm: Use osmo_timer_del() on FSM cleanup
+  * sccp_helpers: don't return msgb with l2h set
+  * Allocate SCCP user primitives with headroom
+  * sccp_types.h: Fix value for SCCP_REFUSAL_UNEQUIPPED_USER
+  * debian/control: Fix Vcs-Browser
+  * ipa_asp_fsm: Prevent against integer underflow
+
+  [ Pau Espin Pedrol ]
+  * ss7_vty: Fix out-of-bounds access in 'as' cmd
+  * contrib/test: Fix config of local/remote ports
+  * ss7: Re-bind xUA server socket after setting new IP
+  * contrib: jenkins.sh: Disable doxygen in libosmocore build
+  * use osmo_init_logging2
+
+  [ Martin Hauke ]
+  * build: AC_PROG_LIBTOOL is the same as LT_INIT
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Thu, 03 May 2018 17:08:07 +0200
+
+libosmo-sccp (0.8.1) unstable; urgency=medium
+
+  * New upstream 0.8.1 release.
+
+ -- Harald Welte <lafore@gnumonks.org>  Sat, 28 Oct 2017 12:40:00 +0200
+
+libosmo-sccp (0.8.0) unstable; urgency=medium
+
+  * New upstream 0.8.0 release.
+
+ -- Harald Welte <laforge@gnumonks.org>  Fri, 27 Oct 2017 21:50:08 +0200
+
+libosmo-sccp (0.7.1) UNRELEASED; urgency=medium
+
+  * Move forward towards a new release.
+
+ -- Holger Hans Peter Freyther <holger@moiji-mobile.com>  Tue, 24 May 2016 22:57:59 +0200
+
+libosmo-sccp (0.7.0) unstable; urgency=medium
+
+  * New release.
+
+ -- Holger Hans Peter Freyther <holger@moiji-mobile.com>  Sat, 01 Aug 2015 20:12:05 +0200
+
+libosmo-sccp (0.0.6.5) unstable; urgency=medium
+
+  * Non-maintainer upload.
+
+ --  Holger Hans Peter Freyther <holger@freyther.de>  Thu, 16 Apr 2015 21:16:25 +0200
+
+libosmo-sccp (0.0.6.4) unstable; urgency=medium
+
+  * Bump the version due the package changes.
+
+ -- Holger Hans Peter Freyther <holger@freyther.de>  Sat, 14 Mar 2015 19:47:20 +0100
+
+libosmo-sccp (0.0.6.3) unstable; urgency=low
+
+  * New upstream release 0.0.6.3.
+
+ -- Holger Hans Peter Freyther <holger@freyther.de>  Tue, 06 Nov 2012 13:24:14 +0100
+
+libosmo-sccp (0.0.6.2+git2-1) precise; urgency=low
+
+  * Fix version issue.
+
+ -- Eric Butler <eric@codebutler.com>  Tue, 14 Aug 2012 20:52:45 -0700
+
+libosmo-sccp (0.0.6.2+git2) precise; urgency=low
+
+  * Update debian package.
+
+ -- Eric Butler <eric@codebutler.com>  Tue, 14 Aug 2012 17:08:14 -0700
+
+libosmo-sccp (0.0.5) unstable; urgency=low
+
+  * New upstream release 0.0.5 
+
+ -- Harald Welte <laforge@gnumonks.org>  Tue, 10 May 2011 17:30:34 +0200
+
+libosmo-sccp (0.0.3) natty; urgency=low
+
+  * New upstream release with 0.0.3 and more.
+
+ -- Holger Hans Peter Freyther <holger@freyther.de>  Thu, 13 Jan 2011 18:16:25 +0800
+
+libosmo-sccp (0.0.2-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Harald Welte <laforge@gnumonks.org>  Tue, 24 Aug 2010 14:08:42 +0200

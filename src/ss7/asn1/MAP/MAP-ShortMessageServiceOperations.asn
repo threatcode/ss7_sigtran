@@ -1,0 +1,251 @@
+-- $Id: MAP-ShortMessageServiceOperations.asn 34814 2010-11-08 23:15:16Z etxrab $
+-- 3GPP TS 29.002 V9.3.0 (2010-09)  
+-- 17.6.5	Short message service operations
+
+MAP-ShortMessageServiceOperations {
+   itu-t identified-organization (4) etsi (0) mobileDomain (0)
+   gsm-Network (1) modules (3) map-ShortMessageServiceOperations (9)
+   version12 (12)}
+
+DEFINITIONS
+
+::=
+
+BEGIN
+
+EXPORTS
+	sendRoutingInfoForSMV2,
+	sendRoutingInfoForSMV3,
+	forwardSM,
+	mo-ForwardSM,
+	mt-ForwardSM,
+	reportSM-DeliveryStatusV2,
+	reportSM-DeliveryStatusV3,
+	alertServiceCentre,
+	informServiceCentreV2,
+	informServiceCentreV3,
+	readyForSMV2,
+	readyForSMV3,
+	mt-ForwardSM-VGCS
+;
+
+IMPORTS
+	OPERATION
+FROM Remote-Operations-Information-Objects {
+joint-iso-itu-t remote-operations(4)
+  informationObjects(5) version1(0)}
+
+	systemFailure,
+	dataMissing,
+	unexpectedDataValue,
+	facilityNotSupported,
+	unknownSubscriber,
+	unidentifiedSubscriber,
+	illegalSubscriber,
+	illegalEquipment,
+	teleserviceNotProvisioned,
+	callBarred,
+	subscriberBusyForMT-SMS,
+	sm-DeliveryFailure,
+	messageWaitingListFull,
+	absentSubscriberSM
+FROM MAP-Errors {
+   itu-t identified-organization (4) etsi (0) mobileDomain (0)
+   gsm-Network (1) modules (3) map-Errors (10) version12 (12)}
+
+	RoutingInfoForSM-ArgV2,
+	RoutingInfoForSM-ArgV3,
+	RoutingInfoForSM-ResV2,
+	RoutingInfoForSM-ResV3,
+	ForwardSM-Arg,
+	MO-ForwardSM-Arg,
+	MO-ForwardSM-Res,
+	MT-ForwardSM-Arg,
+	MT-ForwardSM-Res,
+	ReportSM-DeliveryStatusArgV2,
+	ReportSM-DeliveryStatusArgV3,
+	StoredMSISDN,
+	ReportSM-DeliveryStatusResV3,
+	AlertServiceCentreArg,
+	InformServiceCentreArgV2,
+	InformServiceCentreArgV3,
+	ReadyForSM-ArgV2,
+	ReadyForSM-ArgV3,
+	ReadyForSM-ResV3,
+	MT-ForwardSM-VGCS-Arg,
+	MT-ForwardSM-VGCS-Res
+FROM MAP-SM-DataTypes {
+   itu-t identified-organization (4) etsi (0) mobileDomain (0)
+   gsm-Network (1) modules (3) map-SM-DataTypes (16) version12 (12)}
+
+;
+
+sendRoutingInfoForSMV2  OPERATION ::= {				--Timer m
+	ARGUMENT
+		RoutingInfoForSM-ArgV2
+	RESULT
+		RoutingInfoForSM-ResV2
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue |
+		facilityNotSupported |
+		unknownSubscriber |
+		teleserviceNotProvisioned |
+		absentSubscriberV2 |
+		callBarred}
+	CODE	local:45 }
+sendRoutingInfoForSMV3  OPERATION ::= {				--Timer m
+	ARGUMENT
+		RoutingInfoForSM-ArgV3
+	RESULT
+		RoutingInfoForSM-ResV3
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue |
+		facilityNotSupported |
+		unknownSubscriber |
+		teleserviceNotProvisioned |
+		callBarred |
+		absentSubscriberSM}
+	CODE	local:45 }
+
+forwardSM OPERATION ::= {				--Timer ml
+	ARGUMENT
+		ForwardSM-Arg
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue |
+		facilityNotSupported |
+		illegalSubscriber |
+		illegalEquipment |
+		absentSubscriber |
+		subscriberBusyForMT-SMS |
+		sm-DeliveryFailure}
+	CODE	local:46 }
+
+mo-ForwardSM  OPERATION ::= {				--Timer ml
+	ARGUMENT
+		MO-ForwardSM-Arg
+	RESULT
+		MO-ForwardSM-Res
+		-- optional
+	ERRORS {
+		systemFailure |
+		unexpectedDataValue |
+		facilityNotSupported |
+		sm-DeliveryFailure}
+	CODE	local:46 }
+
+mt-ForwardSM  OPERATION ::= {				--Timer ml
+	ARGUMENT
+		MT-ForwardSM-Arg
+	RESULT
+		MT-ForwardSM-Res
+		-- optional
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue |
+		facilityNotSupported |
+		unidentifiedSubscriber |
+		illegalSubscriber |
+		illegalEquipment |
+		subscriberBusyForMT-SMS |
+		sm-DeliveryFailure |
+		absentSubscriberSM}
+	CODE	local:44 }
+
+reportSM-DeliveryStatusV2  OPERATION ::= {			--Timer s
+	ARGUMENT
+		ReportSM-DeliveryStatusArgV2
+	RESULT
+		StoredMSISDN
+		-- optional
+	ERRORS {
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber |
+		messageWaitingListFull}
+	CODE	local:47 }
+reportSM-DeliveryStatusV3  OPERATION ::= {			--Timer s
+	ARGUMENT
+		ReportSM-DeliveryStatusArgV3
+	RESULT
+		ReportSM-DeliveryStatusResV3
+		-- optional
+	ERRORS {
+		dataMissing |
+		unexpectedDataValue |
+		unknownSubscriber |
+		messageWaitingListFull}
+	CODE	local:47 }
+
+--- Imported from GSM TS 09.02 Version 4.19.1 (December 2000) [HW]
+noteSubscriberPresent OPERATION ::= {
+	ARGUMENT
+		NoteSubscriberPresentArg
+	CODE	local:48 }
+
+alertServiceCentreWithoutResult OPERATION ::= {
+	ARGUMENT
+		AlertServiceCentreArg
+	CODE	local: 49 }
+--- End of import [HW]
+
+alertServiceCentre  OPERATION ::= {				--Timer s
+	ARGUMENT
+		AlertServiceCentreArg
+	RETURN RESULT TRUE
+	ERRORS {
+		systemFailure |
+		dataMissing |
+		unexpectedDataValue}
+	CODE	local:64 }
+
+informServiceCentreV2  OPERATION ::= {				--Timer s
+	ARGUMENT
+		InformServiceCentreArgV2
+	CODE	local:63 }
+informServiceCentreV3  OPERATION ::= {				--Timer s
+	ARGUMENT
+		InformServiceCentreArgV3
+	CODE	local:63 }
+
+readyForSMV2  OPERATION ::= {				--Timer m
+	ARGUMENT
+		ReadyForSM-ArgV2
+	ERRORS {
+		dataMissing |
+		unexpectedDataValue |
+		facilityNotSupported |
+		unknownSubscriber}
+	CODE	local:66 }
+readyForSMV3  OPERATION ::= {				--Timer m
+	ARGUMENT
+		ReadyForSM-ArgV3
+	RESULT
+		ReadyForSM-ResV3
+		-- optional
+	ERRORS {
+		dataMissing |
+		unexpectedDataValue |
+		facilityNotSupported |
+		unknownSubscriber}
+	CODE	local:66 }
+
+mt-ForwardSM-VGCS  OPERATION ::= {				--Timer ml
+	ARGUMENT
+		MT-ForwardSM-VGCS-Arg
+	RESULT
+		MT-ForwardSM-VGCS-Res
+		-- optional
+	ERRORS {
+		systemFailure |
+		unexpectedDataValue }
+	CODE	local:21 }
+
+
+END

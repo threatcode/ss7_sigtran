@@ -1,0 +1,21 @@
+/*
+ * mytlv.h
+ */
+#ifndef _MYTLV_H_
+#define _MYTLV_H_
+
+#include "defs.h"
+
+typedef struct {
+  uint16_t tag;
+  uint16_t len;
+  uint8_t val[SIGTRAN_MTU-4]; /* MTU IN MTP3 IS USUALLY 272 */
+} mytlv_t;
+
+mytlv_t *mytlv_build(uint16_t tag, void *val, uint16_t len);
+octet *mytlv2octet(mytlv_t *tlv, uint16_t *nextpos);
+mytlv_t *octet2mytlv(octet *buf, uint16_t buflen, uint16_t *nextpos);
+void mytlv_dump(mytlv_t *tlv);
+
+
+#endif

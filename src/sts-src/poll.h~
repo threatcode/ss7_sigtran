@@ -1,0 +1,52 @@
+/*
+ * poll.h
+ * (e)poll/kqueue wrapper according to system being used
+ */
+
+#ifdef __linux__
+#define USE_EPOLL
+#else
+#define USE_KQUEUE
+#endif
+
+#ifdef USE_EPOLL
+#include <sys/epoll.h>
+
+typedef struct epoll_event event_t;
+#define EVQ_CREATE() epoll_create1(EPOLL_CLOEXEC)
+#define EVQ_CTL(evq,fd,cmd,evp) do { \
+  if (epoll_ctl((evq),(cmd),(fd),(evp)) == -1) { perror("epoll_ctl"); } \
+} while (0)
+#define EVQ_ADD(evq,fd,evp) EVQ_CTL(evq,fd,EPOLL_CTL_ADD,evp)
+#define EVQ_DEL(evq,fd) EVQ_CTL(evq,fd,EPOLL_CTL_DEL,NULL)
+#define EVQ_POLL(evq,evlist,nevents) epoll_wait((evq), (evlist),(nevents), -1)
+#define EV_GETFD(ev) ((ev).data.fd)
+#define EV_GETPTR(ev) ((ev).data.ptr)
+#define EVP_GETFD(evp) ((evp)->data.fd)
+#define EVP_GETPTR(evp) ((evp)->data.ptr)
+
+#endif
+
+#ifdef USE_KQUEUE
+/* MACOSX */
+#include <sys/types.h>
+#include <sys/event.h>
+#include <sys/time.h>
+
+typedef struct kevent event_t;
+#define EVQ_CREATE() kqueue()
+/* evp = &ev */
+#define EVQ_CTL(evq,fd,cmd,evp) do { \
+  EV_SET((evp), (fd), EVFILT_READ, (cmd), 0, 0, 0); \
+  kevent((evq), (evp), 1, (const event_t *) 0, 0, (struct timespec *) 0); \
+} while (0)
+#define EVQ_ADD(evq,fd,evp) EVQ_CTL(evq,fd,EV_ADD,evp)
+#define EVQ_DEL(evq,fd,evp) EVQ_CTL(evq,fd,EV_DELETE,evp)
+#define EVQ_POLL(evq,evlist,nevents) kevent((evq), 0, 0, (evlist),(nevents), (const struct timespec *) 0)
+#define EV_GETFD(ev) ((ev).ident)
+#define EV_GETPTR(ev) ((ev).udata)
+#define EVP_GETFD(evp) ((evp)->ident)
+#define EVP_GETPTR(evp) ((evp)->udata)
+
+
+#endif

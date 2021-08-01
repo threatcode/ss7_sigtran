@@ -1,0 +1,261 @@
+-- 7.1.1	Operation timers
+-- 7.2	SMS contracts, packages and ACs
+-- 7.2.1	smsSSF/gsmSCF ASN.1 module
+CAP-smsSSF-gsmSCF-pkgs-contracts-acs {itu-t(0) identified-organization(4) etsi(0) mobileDomain(0) umts-network(1) modules(3) cap-smsSSF-gsmSCF-pkgs-contracts-acs(106) version8(7)}
+
+DEFINITIONS ::= BEGIN
+
+-- This module specifies the Operation Packages, Contracts, Application Contexts
+-- and Abstract Syntaxes used for the smsSSF - gsmSCF interface, for the
+-- control of MO-SMS and MT-SMS.
+
+-- The table in subclause 2.1 lists the specifications that contain the modules
+-- that are used by CAP.
+
+IMPORTS
+
+	PARAMETERS-BOUND,
+	cAPSpecificBoundSet
+FROM CAP-classes classes 
+-- Elements that exist in cAPSpecificBoundSet in Rel-5 are not changed in Rel-6. As a
+-- result, the value range of data type definitions in Rel-5 are not changed in Rel-6.
+
+	CONTRACT,
+	OPERATION-PACKAGE,
+	OPERATION
+FROM Remote-Operations-Information-Objects ros-InformationObjects
+
+	TCMessage {} 
+FROM TCAPMessages tc-Messages
+
+	APPLICATION-CONTEXT,
+	dialogue-abstract-syntax
+FROM TC-Notation-Extensions tc-NotationExtensions
+
+	connectSMSV3{},
+	continueSMSV3,
+	eventReportSMSV3{},
+	furnishChargingInformationSMSV3{},
+	initialDPSMSV3{},
+	releaseSMSV3,
+	requestReportSMSEventV3{},
+	resetTimerSMSV3{},
+	connectSMSV4{},
+	continueSMSV4,
+	eventReportSMSV4{},
+	furnishChargingInformationSMSV4{},
+	initialDPSMSV4{},
+	releaseSMSV4,
+	requestReportSMSEventV4{},
+	resetTimerSMSV4{}
+FROM CAP-SMS-ops-args sms-Operations
+-- Object Identifier 'sms-Operations' is updated to version8(7) in Rel-6. As a result,
+-- the present module, 'CAP-smsSSF-gsmSCF-pkgs-contracts-acs', IMPORTS CAP Operation
+-- definitions from CAP-SMS-ops-args version8(7). Operation definitions are used in the
+-- ABSTRACT SYNTAX definitions and in the OPERATION PACKAGE definitions.
+
+	id-ac-cap3-sms-AC,
+	id-ac-cap4-sms-AC,
+-- The APPLICATION-CONTEXT Identifiers for CAP V3 and CAP V4 for SMS in Rel-6 are the same as
+-- in Rel-5.
+
+	id-cap3SmsSsfTogsmScf,
+	id-cap4SmsSsfTogsmScf,
+-- The CONTRACT Identifiers for CAP V3 and CAP V4 for SMS in Rel-6 are the same as in Rel-5.
+
+	id-package-smsActivation,
+	id-package-smsConnect,
+	id-package-smsContinue,
+	id-package-smsRelease,
+	id-package-smsEventHandling, 
+	id-package-smsBilling, 
+	id-package-smsTimer,
+-- The OPERATION-PACKAGE Identifiers for CAP V3 and CAP V4 for SMS in Rel-6 are the same as
+-- in Rel-5.
+
+	sms-Operations,
+-- Object Identifier sms-Operations is updated to version8(7) in Rel-6. As a result, the present
+-- module, 'CAP-smsSSF-gsmSCF-pkgs-contracts-acs', IMPORTS Rel-6 versions of the CAP Operation
+-- definitions.
+
+	tc-NotationExtensions,
+	tc-Messages,
+	ros-InformationObjects,
+	classes,
+
+	id-as-smsSSF-gsmSCF-AS
+-- The ABSTRACT-SYNTAX Identifiers for CAP V3 and CAP V4 for SMS in Rel-6 are the same as
+-- in Rel-5.
+
+FROM CAP-object-identifiers {itu-t(0) identified-organization(4) etsi(0) mobileDomain(0)
+umts-network(1) modules(3) cap-object-identifiers(100) version8(7)}
+
+;
+
+-- Application Contexts
+
+-- Rel-6 uses the same Application Context versions for SMS as Rel-5. The CONTRACT and ABSTRACT
+-- SYNTAXES for SMS are defined in Rel-6.
+
+-- Refer to ITU-T Recommendation Q.775 for the formal definition of APPLICATION-CONTEXT.
+-- The structured DIALOGUE MODE is defined in ITU-T Recommendation Q.771; the
+-- dialogue-abstract-syntax ABSTRACT SYNTAX is defined in ITU-T Recommendation Q.775.
+
+cap3-sms-AC APPLICATION-CONTEXT ::= {
+	CONTRACT					cap3SMS
+	DIALOGUE MODE				structured
+	ABSTRACT SYNTAXES			{dialogue-abstract-syntax |
+								sms-AbstractSyntax} 
+	APPLICATION CONTEXT NAME	id-ac-cap3-sms-AC}
+-- This application context shall be used for CAMEL support of MO-SMS.
+-- 'cap3SMS' and 'sms-AbstractSyntax' are defined in the present module.
+
+cap4-sms-AC APPLICATION-CONTEXT ::= {
+	CONTRACT					cap4SMS
+	DIALOGUE MODE				structured
+	ABSTRACT SYNTAXES			{dialogue-abstract-syntax |
+								sms-AbstractSyntax} 
+	APPLICATION CONTEXT NAME	id-ac-cap4-sms-AC}
+-- This application context shall be used for CAMEL support of MT-SMS.
+-- 'cap4SMS' and 'sms-AbstractSyntax' are defined in the present module.
+
+
+-- Contracts
+-- The CONTRACT definitions for SMS in Rel-6 use OPERATION-PACKAGE definitions which are
+-- defined in Rel-6.
+
+cap3SMS CONTRACT ::= {
+-- dialogue initiated by gprsSSF or gsmSSF with InitialDPSMS Operation
+	INITIATOR CONSUMER OF		{smsActivationPackageV3 {cAPSpecificBoundSet}}
+	RESPONDER CONSUMER OF		{smsConnectPackageV3 {cAPSpecificBoundSet} |
+								smsReleasePackageV3 |
+								smsEventHandlingPackageV3 {cAPSpecificBoundSet} |
+								smsTimerPackageV3 {cAPSpecificBoundSet} |
+								smsBillingPackageV3 {cAPSpecificBoundSet} |
+								smsProcessingPackageV3}
+	ID							id-cap3SmsSsfTogsmScf}
+-- The OPERATION-PACKAGEs are defined in the present module.
+
+cap4SMS CONTRACT ::= {
+-- dialogue initiated by gprsSSF or gsmSSF with InitialDPSMS Operation
+	INITIATOR CONSUMER OF		{smsActivationPackageV4 {cAPSpecificBoundSet}}
+	RESPONDER CONSUMER OF		{smsConnectPackageV4 {cAPSpecificBoundSet} |
+								smsReleasePackageV4 |
+								smsEventHandlingPackageV4 {cAPSpecificBoundSet} |
+								smsTimerPackageV4 {cAPSpecificBoundSet} |
+								smsBillingPackageV4 {cAPSpecificBoundSet} |
+								smsProcessingPackageV4 }
+	ID							id-cap4SmsSsfTogsmScf}
+-- The OPERATION-PACKAGEs are defined in the present module.
+
+
+-- Operation Packages
+-- The OPERATION-PACKAGE definitions for SMS in Rel-6 use Operation definitions from Rel-6. The
+-- OPERATION definitions are IMPORTED from CAP-SMS-ops-args.
+
+smsActivationPackageV3 {PARAMETERS-BOUND : bound} OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{initialDPSMSV3 {bound}}
+	ID					id-package-smsActivation}
+
+smsActivationPackageV4 {PARAMETERS-BOUND : bound} OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{initialDPSMSV4 {bound}}
+	ID					id-package-smsActivation}
+
+smsConnectPackageV3 {PARAMETERS-BOUND : bound} OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{connectSMSV3 {bound}}
+	ID					id-package-smsConnect}
+
+smsConnectPackageV4 {PARAMETERS-BOUND : bound} OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{connectSMSV4 {bound}}
+	ID					id-package-smsConnect}
+
+smsProcessingPackageV3 OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{continueSMSV3}
+	ID					id-package-smsContinue}
+
+smsProcessingPackageV4 OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{continueSMSV4}
+	ID					id-package-smsContinue}
+
+smsReleasePackageV3 OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{releaseSMSV4}
+	ID					id-package-smsRelease}
+
+smsReleasePackageV4 OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{releaseSMSV4}
+	ID					id-package-smsRelease}
+
+smsEventHandlingPackageV3 {PARAMETERS-BOUND : bound} OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{requestReportSMSEventV3 {bound}}
+	SUPPLIER INVOKES	{eventReportSMSV3 {bound}}
+	ID					id-package-smsEventHandling}
+smsEventHandlingPackageV4 {PARAMETERS-BOUND : bound} OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{requestReportSMSEventV4 {bound}}
+	SUPPLIER INVOKES	{eventReportSMSV4 {bound}}
+	ID					id-package-smsEventHandling}
+
+smsBillingPackageV3 {PARAMETERS-BOUND : bound} OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{furnishChargingInformationSMSV3 {bound}}
+	ID					id-package-smsBilling}
+smsBillingPackageV4 {PARAMETERS-BOUND : bound} OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{furnishChargingInformationSMSV4 {bound}}
+	ID					id-package-smsBilling}
+
+smsTimerPackageV3 {PARAMETERS-BOUND : bound} OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{resetTimerSMSV3 {bound}}
+	ID					id-package-smsTimer}
+smsTimerPackageV4 {PARAMETERS-BOUND : bound} OPERATION-PACKAGE ::= {
+	CONSUMER INVOKES	{resetTimerSMSV4 {bound}}
+	ID					id-package-smsTimer}
+
+
+-- Abstract Syntaxes
+
+-- SmsInvokable and SmsReturnable use OPERATION definitions with version8(7). As a result,
+-- Generic-sms-PDUs uses version8(7) OPERATION definitions. As a subsequent result,
+-- sms-AbstractSyntax uses version8(7) OPERATION definitions. That ABSTRACT-SYNTAX is used
+-- in the cap3-sms-AC APPLICATION-CONTEXT definition and in the and cap4-sms-AC APPLICATION-
+-- CONTEXT definition (CAP from smsSSF to gsmSCF).
+
+sms-AbstractSyntax ABSTRACT-SYNTAX ::= {
+	Generic-sms-PDUs
+	IDENTIFIED BY	id-as-smsSSF-gsmSCF-AS }
+-- 'Generic-sms-PDUs' is defined in the present module.
+
+Generic-sms-PDUs ::= TCMessage {{SmsInvokable},
+								{SmsReturnable}}
+-- 'SmsInvokable' and 'SmsReturnable' are defined in the present module.
+
+SmsInvokable OPERATION ::= {
+	connectSMSV3 {cAPSpecificBoundSet} |
+	eventReportSMSV3 {cAPSpecificBoundSet} |
+	furnishChargingInformationSMSV3 {cAPSpecificBoundSet} |
+	initialDPSMSV3 {cAPSpecificBoundSet} |
+	requestReportSMSEventV3 {cAPSpecificBoundSet} |
+	resetTimerSMSV3 {cAPSpecificBoundSet} |
+	connectSMSV4 {cAPSpecificBoundSet} |
+	eventReportSMSV4 {cAPSpecificBoundSet} |
+	furnishChargingInformationSMSV4 {cAPSpecificBoundSet} |
+	initialDPSMSV4 {cAPSpecificBoundSet} |
+	requestReportSMSEventV4 {cAPSpecificBoundSet} |
+	resetTimerSMSV4 {cAPSpecificBoundSet}}
+-- The OPERATION definitions are IMPORTED from CAP-SMS-ops-args version8(7).
+
+SmsReturnable OPERATION ::= {
+	connectSMSV3 {cAPSpecificBoundSet} |
+	continueSMSV3 |
+	furnishChargingInformationSMSV3 {cAPSpecificBoundSet} |
+	initialDPSMSV3 {cAPSpecificBoundSet} |
+	releaseSMSV3 |
+	requestReportSMSEventV3 {cAPSpecificBoundSet} |
+	resetTimerSMSV3 {cAPSpecificBoundSet} |
+	connectSMSV4 {cAPSpecificBoundSet} |
+	continueSMSV4 |
+	furnishChargingInformationSMSV4 {cAPSpecificBoundSet} |
+	initialDPSMSV4 {cAPSpecificBoundSet} |
+	releaseSMSV4 |
+	requestReportSMSEventV4 {cAPSpecificBoundSet} |
+	resetTimerSMSV4 {cAPSpecificBoundSet}}
+-- The OPERATION definitions are IMPORTED from CAP-SMS-ops-args version8(7).
+
+END

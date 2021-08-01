@@ -1,0 +1,57 @@
+libasn1c (0.9.32) unstable; urgency=medium
+
+  [ Pau Espin Pedrol ]
+  * debian/rules: Don't overwrite .tarball-version
+  * Fix LIBVERSION not applied
+
+  [ Oliver Smith ]
+  * jenkins.sh: disable parallel build
+  * Revert "jenkins.sh: disable parallel build"
+  * contrib/jenkins.sh: run "make maintainer-clean"
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Wed, 07 Aug 2019 13:26:10 +0200
+
+libasn1c (0.9.31) unstable; urgency=medium
+
+  [ Alexander Couzens ]
+  * debian: set VERSION to fix version in .pc files
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Fri, 04 May 2018 12:15:34 +0200
+
+libasn1c (0.9.30) unstable; urgency=medium
+
+  * configure.ac: Use git-version-gen to set VERSION
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Thu, 03 May 2018 18:23:35 +0200
+
+libasn1c (0.9.29) unstable; urgency=medium
+
+  [ Harald Welte ]
+  * link libasn1c against libmath, don't ask users to do it
+
+  [ Neels Hofmeyr ]
+  * fix compiler warning: drop dead code from BIT_STRING_fromBuf()
+  * jenkins: add missing set -e to catch build errors
+  * jenkins: use osmo-clean-workspace.sh before and after build
+  * add --enable-sanitize config option
+  * configure: add --enable-werror
+  * jenkins.sh: use --enable-werror configure flag, not CFLAGS
+
+  [ Pau Espin Pedrol ]
+  * .gitignore: add compile
+  * build: Support make release target
+  * debian/changelog: Set previous versions to unstable
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Thu, 03 May 2018 17:18:02 +0200
+
+libasn1c (0.9.28) unstable; urgency=low
+
+  * Initial release.
+
+ -- Harald Welte <laforge@gnumonks.org>  Fri, 27 Oct 2017 22:08:03 +0000
+
+libasn1c (0.1.0) unstable; urgency=low
+
+  * Initial release.
+
+ -- Alexander Couzens <lynxis@fe80.eu>  Sun, 06 Aug 2017 22:25:03 +0000

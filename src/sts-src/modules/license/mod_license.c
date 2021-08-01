@@ -1,0 +1,26 @@
+/*
+ * mod_license.c
+ * license module
+ * Author: Ayub <ayub@nixtecsys.com>
+ */
+#include "mod_license.h"
+
+int module_start(system_t *sys)
+{
+  FTRACE();
+
+  DTRACE("*** License looks OK ***\n");
+  return 0;
+}
+
+int module_stop(system_t *sys, module_t *mod)
+{
+  FTRACE();
+
+  if (mod && mod->fd > 0) close(mod->fd);
+  /*
+   * closing the descriptor automatically removes it from the event
+  EVQ_DEL(sys->eventfd, mod->fd);
+  */
+  return 0;
+}

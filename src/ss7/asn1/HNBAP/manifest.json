@@ -1,0 +1,11 @@
+{
+   "name" : "HNBAP",
+   "dependencies" : [ "TCAP" ],
+   "rootModules" : [ 
+      "HNBAP-CommonDataTypes", 
+      "HNBAP-Constants" ,
+      "HNBAP-Containers",
+      "HNBAP-IEs",
+      "HNBAP-PDU-Contents",
+      "HNBAP-PDU-Descriptions" ] 
+}

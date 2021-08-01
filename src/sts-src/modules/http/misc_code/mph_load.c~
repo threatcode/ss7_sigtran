@@ -1,0 +1,44 @@
+#define __CMPH_TIME_H__
+#include <cmph.h>
+#include <stdio.h>
+#include <string.h>
+
+cmph_t *mph_load(const char *file)
+{
+  cmph_t *hash = NULL;
+  FILE *fp = fopen(file, "r");
+  if (fp == NULL) {
+    fprintf(stderr, "File %s not found.\n", file);
+    return NULL;
+  }	
+  cmph_io_adapter_t *source = cmph_io_nlfile_adapter(fp);
+
+  cmph_config_t *config = cmph_config_new(source);
+  cmph_config_set_algo(config, CMPH_BDZ);
+  hash = cmph_new(config);
+  cmph_config_destroy(config);
+  cmph_io_nlfile_adapter_destroy(source);   
+  fclose(fp);
+
+#if 0
+  const char *key = "root";
+  unsigned int id = cmph_search(hash, key, (cmph_uint32) strlen(key));
+  fprintf(stderr, "Id:%u\n", id);
+  cmph_destroy(hash);
+  cmph_io_nlfile_adapter_destroy(source);   
+  fclose(fp);
+#endif
+
+  return hash;
+}
+
+int main(int argc, char **argv)
+{   
+  cmph_t *hash = mph_load("/usr/share/dict/cracklib-words");
+  const char *key = "root";
+  unsigned int id = cmph_search(hash, key, (cmph_uint32) strlen(key));
+  fprintf(stderr, "Id:%u\n", id);
+  cmph_destroy(hash);
+  return 0;
+}
+

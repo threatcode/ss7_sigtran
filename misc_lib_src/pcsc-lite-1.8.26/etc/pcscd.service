@@ -1,0 +1,11 @@
+[Unit]
+Description=PC/SC Smart Card Daemon
+Requires=pcscd.socket
+Documentation=man:pcscd(8)
+
+[Service]
+ExecStart=/home/ayub/.local/sbin/pcscd --foreground --auto-exit
+ExecReload=/home/ayub/.local/sbin/pcscd --hotplug
+
+[Install]
+Also=pcscd.socket

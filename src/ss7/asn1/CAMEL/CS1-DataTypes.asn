@@ -1,0 +1,58 @@
+-- Minimal INAP support..
+-- http://www.itu.int/ITU-T/formal-language/itu-t/q/q1218/1995/IN-CS-1-Datatypes.html
+CS1-DataTypes {itu-t recommendation q 1218 modules(0) cs-1-datatypes(2)
+  version1(0)}
+
+DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+--  The SCF may specify the number of digits to be collected by the SSF for the CollectedInfo event.
+--  When all digits are collected, the SSF reports the event to the SCF.
+--  The SCF may set a timer in the SSF for the No Answer event. If the user does not answer the call 
+--  within the allotted time, the SSF reports the event to the SCF.
+Duration ::= INTEGER(-2..86400)
+
+Integer4 ::= INTEGER(0..2147483647)
+
+Interval ::= INTEGER(-1..60000)
+
+-- Indicators which are exchanged between SSP and SCP to resolve interactions between IN based services
+-- and network based services, respectively between different IN based services.
+-- The contents are network specific and identified as a subject for further study with respect to INAP.
+-- The following example is listed to illustrate the use of this parameter:
+--	CallToBeDiverted	Allowed/NotAllowed Indicator
+-- If the CallToBeDiverted indicator is set to NotAllowed, the destination exchange shall not allow any
+-- divertion on the subjected call. By this, each service can pass the applicable indicators to inform the
+-- destination exchange of how specific services are to be handled.
+ServiceKey ::=
+  Integer4
+
+-- Indicates the destination user network interface related information. Refer to the Q.763 Access
+-- Transport parameter for encoding.
+LegID ::= CHOICE {sendingSideID    [0]  LegType,
+                  receivingSideID  [1]  LegType
+}
+
+-- Indicates the Calling Party Subaddress. Refer to Recommendation Q.931 for encoding.
+CallingPartysCategory ::= OCTET STRING(SIZE (1))
+
+-- Indicates the variable part of the message.
+-- BCD coded variable parts are encoded as described in the examples below.
+-- For example, time = 12:15 would be encoded as:
+--	Bits	HGFE	DCBA
+--	leading octet	2	1
+--		5	1
+-- date = 1993 September 30th would be encoded as:
+--	Bits	HGFE	DCBA
+--	leading octet	3	9
+--		9	0
+--		0	3 
+-- The Definition of range of constants Follows
+highLayerCompatibilityLength INTEGER ::= 2
+
+--  The default value for Cause is the same as in ISUP.
+HighLayerCompatibility ::= OCTET STRING(SIZE (highLayerCompatibilityLength))
+
+-- Indicates redirecting number. Refer to the Q.763 Redirecting number for encoding.
+RedirectionInformation ::= OCTET STRING(SIZE (2))
+END

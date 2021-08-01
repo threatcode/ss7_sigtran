@@ -1,0 +1,44 @@
+/*
+ * test.c
+ */
+#include "defs.h"
+#include <stdio.h>
+#include "gsm_utils.h"
+//#include <osmocom/gsm/gsm_utils.h>
+
+//int utf8_to_gsm7( cbytes_t  utf8, int  utf8len, bytes_t  dst, int offset );
+
+int main(void)
+{
+  char outbuf[256];
+  //uint8_t octets[] = { 0x91, 0x88, 0x10, 0x35, 0x64, 0x91, 0x59, 0xf5 };
+  //uint8_t octets[] = { 0x91, 0x88, 0x10, 0x35, 0x64, 0x91, 0x59, 0xf5 };
+  //octet octets[] = { 0xaa, 0x5a, 0xac, 0x36, 0x02 };
+  //octet octets[] = { 0xed, 0xb0, 0x1b }; // man
+  octet octets[] = { 0xc1, 0xb9, 0x3c, 0x6c, 0xae, 0xb3, 0x1b }; // Asraful
+  //AA 5A AC A6 AA C5 6A 2A 5B 4E 85 CB 8D 1A
+  //octet octets[] = { 0xaa, 0x5a, 0xac, 0xa6, 0xaa, 0xc5, 0x6a, 0x2a, 0x5b, 0x4e, 0x85, 0xcb, 0x8d, 0x1a };
+  //uint8_t octets[] = { 0x88, 0x10, 0x35, 0x64, 0x91, 0x59, 0xf5 };
+  //uint8_t octets[] = { 0x88, 0x10, 0x05, 0x51, 0x99, 0x53 };
+  //decode_msisdn(octets, sizeof(octets), outbuf, &nextpos);
+  int septet_count = sizeof(octets) * 8/7;
+  fprintf(stderr, "octets = %lu, septets = %d, computed octets = %d\n", sizeof(octets), septet_count, gsm_get_octet_len(septet_count));
+
+  //int len = utf8_from_gsm7(octets, 0, septet_count, outbuf);
+  //int len = utf8_from_gsm7(octets, 0, septet_count, outbuf);
+  int len = gsm_7bit_decode_n_ussd(outbuf, sizeof(outbuf), octets, septet_count);
+  fprintf(stderr, "|%s|\n[%d]\n", outbuf, len);
+
+#if 0
+
+  //uint8_t octets[] = { 0x91, 0x88, 0x10, 0x35, 0x64, 0x91, 0x59, 0xf5 };
+
+  int i = 0;
+  for (i = 1; i < sizeof(octets); ++i) {
+    fprintf(stderr, "%u\n", bcd2dec(octets[i]));
+  }
+#endif
+
+  return 0;
+}
+

@@ -1,0 +1,547 @@
+-- Manual attempt to create ROSE/TCAP CONTRACT information object classes
+-- from the GSM MAP specification
+-- (C) 2013 by Holger Hans Peter Freyther
+
+MAP-Contracts {
+   itu-t identified-organization (4) etsi (0) mobileDomain (0)
+   gsm-Network (1) modules (3) map-Contracts (99) version11 (11)}
+
+DEFINITIONS
+
+::=
+
+BEGIN
+
+-- EXPORTS everything
+
+IMPORTS
+	CONTRACT
+FROM
+	Remote-Operations-Information-Objects
+	{joint-iso-itu-t remote-operations(4) informationObjects(5) version1(0)}
+
+   locationUpdatingPackage-v3,
+   dataRestorationPackage-v3,
+   subscriberDataMngtPackage-v2,
+   subscriberDataMngtPackage-v3,
+   tracingPackage-v3,
+   locationCancellationPackage-v2,
+   locationCancellationPackage-v3,
+   roamingNumberEnquiryPackage-v2,
+   roamingNumberEnquiryPackage-v3,
+   interrogationPackage-v2,
+   interrogationPackage-v3,
+   callControlTransferPackage-v3,
+   callControlTransferPackage-v4,
+   resetPackage-v2,
+   resetPackage-v3,
+   handoverControlPackage-v2,
+   handoverControlPackage-v3,
+   imsiRetrievalPackage-v2,
+   equipmentMngtPackage-v3,
+   equipmentMngtPackage-v2,
+   infoRetrievalPackage-v3,
+   infoRetrievalPackage-v2,
+   infoRetrievalPackage-v1,
+   interVlrInfoRetrievalPackage-v3,
+   interVlrInfoRetrievalPackage-v2,
+   subscriberDataMngtStandAlonePackage-v2,
+   subscriberDataMngtStandAlonePackage-v3,
+   tracingStandAlonePackage-v2,
+   tracingStandAlonePackage-v3,
+   functionalSsPackage-v2,
+   functionalSsPackage-v1,
+   unstructuredSsPackage-v1,
+   bindingPackage-v1,
+   unstructuredSsPackage-v2,
+   shortMsgGatewayPackage-v2,
+   shortMsgGatewayPackage-v3,
+   mo-ShortMsgRelayPackage-v2,
+   mo-ShortMsgRelayPackage-v3,
+   alertingPackage-v1,
+   alertingPackage-v2,
+   mwdMngtPackage-v2,
+   mwdMngtPackage-v3,
+   mt-ShortMsgRelayPackage-v2,
+   mt-ShortMsgRelayPackage-v3,
+   purgingPackage-v2,
+   purgingPackage-v3,
+   subscriberInformationEnquiryPackage-v3,
+   anyTimeInformationEnquiryPackage-v3,
+   groupCallControlPackage-v3,
+   groupCallInfoRetrievalPackage-v3,
+   gprsLocationUpdatingPackage-v3,
+   subscriberDataMngtPackage-v3,
+   tracingPackage-v3,
+   gprsInterrogationPackage-v3,
+   gprsInterrogationPackage-v4,
+   failureReportingPackage-v3,
+   gprsNotifyingPackage-v3,
+   ss-InvocationNotificationPackage-v3,
+   setReportingStatePackage-v3,
+   statusReportPackage-v3,
+   remoteUserFreePackage-v3,
+   setReportingStatePackage-v3,
+   statusReportPackage-v3,
+   callCompletionPackage-v3,
+   locationSvcGatewayPackage-v3,
+   locationSvcEnquiryPackage-v3,
+   locationSvcReportingPackage-v3,
+   ist-AlertingPackage-v3,
+   serviceTerminationPackage-v3,
+   mm-EventReportingPackage-v3,
+   anyTimeInformationHandlingPackage-v3,
+   subscriberDataModificationNotificationPackage-v3,
+   authenticationFailureReportPackage-v3,
+   resourceManagementPackage-v3,
+   mt-ShortMsgRelay-VGCS-Package-v3,
+   vcsgLocationUpdatingPackage-v3,
+   subscriberDataMngtPackage-v3,
+   vcsgLocationCancellationPackage-v3
+FROM MAP-OperationPackages {
+   itu-t identified-organization (4) etsi (0) mobileDomain (0)
+   gsm-Network (1) modules (3) map-OperationPackages (1)
+   version12 (12)}
+;
+
+networkLocUpContract-v2 CONTRACT ::= {
+    -- Responder is HLR if Initiator is VLR
+    INITIATOR CONSUMER OF {
+    locationUpdatingPackage-v2 |
+    dataRestorationPackage-v2}
+    RESPONDER CONSUMER OF {
+    subscriberDataMngtPackage-v2 |
+    tracingPackage-v2}
+}
+
+networkLocUpContract-v3 CONTRACT ::= {
+    -- Responder is HLR if Initiator is VLR
+    INITIATOR CONSUMER OF {
+    locationUpdatingPackage-v3 |
+    dataRestorationPackage-v3}
+    RESPONDER CONSUMER OF {
+    subscriberDataMngtPackage-v3 |
+    tracingPackage-v3}
+}
+
+locationCancellationContract-v2 CONTRACT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR
+    INITIATOR CONSUMER OF {
+    locationCancellationPackage-v2}
+}
+
+locationCancellationContract-v3 CONTRACT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR
+    INITIATOR CONSUMER OF {
+    locationCancellationPackage-v3}
+}
+
+roamingNumberEnquiryContract-v2 CONTRACT ::= {
+    -- Responder is VLR if Initiator is HLR
+    INITIATOR CONSUMER OF {
+    roamingNumberEnquiryPackage-v2}
+}
+
+roamingNumberEnquiryContract-v3 CONTRACT ::= {
+    -- Responder is VLR if Initiator is HLR
+    INITIATOR CONSUMER OF {
+    roamingNumberEnquiryPackage-v3}
+}
+
+locationInfoRetrievalContract-v2 CONTRACT ::= {
+    -- Responder is HLR or NPLR if Initiator is GMSC
+    -- Responder is HLR if Initiator is gsmSCF
+    INITIATOR CONSUMER OF {
+    interrogationPackage-v2}
+}
+
+locationInfoRetrievalContract-v3 CONTRACT ::= {
+    -- Responder is HLR or NPLR if Initiator is GMSC
+    -- Responder is HLR if Initiator is gsmSCF
+    INITIATOR CONSUMER OF {
+    interrogationPackage-v3}
+}
+
+callControlTransferContract-v3 CONTRACT ::= {
+    -- Responder is GMSC if Initiator is VMSC
+    INITIATOR CONSUMER OF {
+    callControlTransferPackage-v3}
+}
+
+callControlTransferContract-v4 CONTRACT ::= {
+    -- Responder is GMSC if Initiator is VMSC
+    INITIATOR CONSUMER OF {
+    callControlTransferPackage-v4}
+}
+
+resetContract-v2 CONTRACT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR or CSS
+    INITIATOR CONSUMER OF {
+    resetPackage-v2}
+}
+
+resetContract-v3 CONTRACT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR or CSS
+    INITIATOR CONSUMER OF {
+    resetPackage-v3}
+}
+
+handoverControlContract-v2 CONTRACT ::= {
+    -- Responder is MSCB if Initiator is MSCA
+    INITIATOR CONSUMER OF {
+    handoverControlPackage-v2}
+}
+
+handoverControlContract-v3 CONTRACT ::= {
+    -- Responder is MSCB if Initiator is MSCA
+    INITIATOR CONSUMER OF {
+    handoverControlPackage-v3}
+}
+
+imsiRetrievalContract-v2 CONTRACT ::= {
+    -- Responder is HLR if Initiator is VLR
+    INITIATOR CONSUMER OF {
+    imsiRetrievalPackage-v2}
+}
+
+equipmentMngtContract-v3 CONTRACT ::= {
+    -- Responder is EIR if Initiator is MSC
+    -- Responder is EIR if Initiator is SGSN
+    INITIATOR CONSUMER OF {
+    equipmentMngtPackage-v3}
+}
+
+equipmentMngtContract-v2 CONTRACT ::= {
+    -- Responder is EIR if Initiator is MSC
+    -- Responder is EIR if Initiator is SGSN
+    INITIATOR CONSUMER OF {
+    equipmentMngtPackage-v2}
+}
+
+infoRetrievalContract-v3 CONTRACT ::= {
+    -- Responder is HLR if Initiator is VLR
+    -- Responder is HLR if Initiator is SGSN
+    INITIATOR CONSUMER OF {
+    infoRetrievalPackage-v3}
+}
+
+infoRetrievalContract-v2 CONTRACT ::= {
+    -- Responder is HLR if Initiator is VLR
+    -- Responder is HLR if Initiator is SGSN
+    INITIATOR CONSUMER OF {
+    infoRetrievalPackage-v2}
+}
+
+infoRetrievalContract-v1 CONTRACT ::= {
+    -- Responder is HLR if Initiator is VLR
+    -- Responder is HLR if Initiator is SGSN
+    INITIATOR CONSUMER OF {
+    infoRetrievalPackage-v1}
+}
+
+interVlrInfoRetrievalContract-v3 CONTRACT ::= {
+    -- Responder is VLR if Initiator is VLR
+    INITIATOR CONSUMER OF {
+    interVlrInfoRetrievalPackage-v3}
+}
+
+interVlrInfoRetrievalContract-v2 CONTRACT ::= {
+    -- Responder is VLR if Initiator is VLR
+    INITIATOR CONSUMER OF {
+    interVlrInfoRetrievalPackage-v2}
+}
+
+subscriberDataMngtContract-v2 CONTRACT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR or CSS
+    INITIATOR CONSUMER OF {
+    subscriberDataMngtStandAlonePackage-v2}
+}
+
+subscriberDataMngtContract-v3 CONTRACT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR or CSS
+    INITIATOR CONSUMER OF {
+    subscriberDataMngtStandAlonePackage-v3}
+}
+
+tracingContract-v2 CONTRACT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR
+    INITIATOR CONSUMER OF {
+    tracingStandAlonePackage-v2}
+}
+
+tracingContract-v3 CONTRACT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR
+    INITIATOR CONSUMER OF {
+    tracingStandAlonePackage-v3}
+}
+
+networkFunctionalSsContract-v2 CONTRACT ::= {
+    -- Responder is HLR, Initiator is VLR
+    INITIATOR CONSUMER OF {
+    functionalSsPackage-v2}
+}
+
+networkFunctionalSsContract-v1 CONTRACT ::= {
+    -- Responder is HLR, Initiator is VLR
+    INITIATOR CONSUMER OF {
+    functionalSsPackage-v1 |
+    unstructuredSsPackage-v1 |
+    bindingPackage-v1}
+}
+
+networkUnstructuredSsContract-v2 CONTRACT ::= {
+    -- Responder is HLR, Initiator is VLR
+    -- Responder is VLR, Initiator is HLR
+    -- Responder is gsmSCF, Initiator is HLR
+    -- Responder is HLR, Initiator is gsmSCF
+    -- Responder is HLR, Initiator is HLR
+    OPERATIONS OF {
+    unstructuredSsPackage-v2}
+}
+
+shortMsgGatewayContract-v2 CONTRACT ::= {
+    -- Responder is HLR if Initiator is GMSC
+    INITIATOR CONSUMER OF {
+    shortMsgGatewayPackage-v2}
+}
+
+shortMsgGatewayContract-v3 CONTRACT ::= {
+    -- Responder is HLR if Initiator is GMSC
+    INITIATOR CONSUMER OF {
+    shortMsgGatewayPackage-v3}
+}
+
+shortMsgMO-RelayContract-v2 CONTRACT ::= {
+    -- Responder is IWMSC if Initiator is MSC
+    -- Responder is IWMSC if Initiator is SGSN
+    INITIATOR CONSUMER OF {
+    mo-ShortMsgRelayPackage-v2}
+}
+
+shortMsgMO-RelayContract-v3 CONTRACT ::= {
+    -- Responder is IWMSC if Initiator is MSC
+    -- Responder is IWMSC if Initiator is SGSN
+    INITIATOR CONSUMER OF {
+    mo-ShortMsgRelayPackage-v3}
+}
+
+shortMsgAlertContract-v1 CONTRACT ::= {
+    -- Responder is IWMSC if Initiator is HLR
+    INITIATOR CONSUMER OF {
+    alertingPackage-v1}
+}
+
+shortMsgAlertContract-v2 CONTRACT ::= {
+    -- Responder is IWMSC if Initiator is HLR
+    INITIATOR CONSUMER OF {
+    alertingPackage-v2}
+}
+
+mwdMngtContract-v2 CONTRACT ::= {
+    -- Responder is HLR if Initiator is SGSN
+    -- Responder is HLR if Initiator is VLR
+    INITIATOR CONSUMER OF {
+    mwdMngtPackage-v2}
+}
+
+mwdMngtContract-v3 CONTRACT ::= {
+    -- Responder is HLR if Initiator is SGSN
+    -- Responder is HLR if Initiator is VLR
+    INITIATOR CONSUMER OF {
+    mwdMngtPackage-v3}
+}
+
+shortMsgMT-RelayContract-v2 CONTRACT ::= {
+    -- Responder is MSC or SGSN if Initiator is GMSC
+    INITIATOR CONSUMER OF {
+    mt-ShortMsgRelayPackage-v2}
+}
+
+shortMsgMT-RelayContract-v3 CONTRACT ::= {
+    -- Responder is MSC or SGSN if Initiator is GMSC
+    INITIATOR CONSUMER OF {
+    mt-ShortMsgRelayPackage-v3}
+}
+
+msPurgingContract-v2 CONTRACT ::= {
+    -- Responder is HLR if Initiator is VLR
+    -- Responder is HLR if Initiator is SGSN
+    INITIATOR CONSUMER OF {
+    purgingPackage-v2}
+}
+
+msPurgingContract-v3 CONTRACT ::= {
+    -- Responder is HLR if Initiator is VLR
+    -- Responder is HLR if Initiator is SGSN
+    INITIATOR CONSUMER OF {
+    purgingPackage-v3}
+}
+
+subscriberInfoEnquiryContract-v3 CONTRACT ::= {
+    -- Responder is VLR or SGSN if Initiator is HLR
+    INITIATOR CONSUMER OF {
+    subscriberInformationEnquiryPackage-v3}
+}
+
+anyTimeInfoEnquiryContract-v3 CONTRACT ::= {
+    -- Responder is HLR or GMLC or NPLR if Initiator is gsmSCF
+    INITIATOR CONSUMER OF {
+    anyTimeInformationEnquiryPackage-v3}
+}
+
+groupCallControlContract-v3 CONTRACT ::= {
+    -- Responder is relay MSC if Initiator is anchor MSC
+    INITIATOR CONSUMER OF {
+    groupCallControlPackage-v3}
+}
+
+groupCallInfoRetControlContract-v3 CONTRACT ::= {
+    -- Responder is group call serving MSC if Initiator is visited MSC
+    -- Responder is visited MSC if Initiator is group call serving MSC
+    INITIATOR CONSUMER OF {
+    groupCallInfoRetrievalPackage-v3}
+}
+
+gprsLocationUpdateContract-v3 CONTRACT ::= {
+    -- Responder is HLR if Initiator is SGSN
+    INITIATOR CONSUMER OF {
+    gprsLocationUpdatingPackage-v3}
+    RESPONDER CONSUMER OF {
+    subscriberDataMngtPackage-v3 |
+    tracingPackage-v3}
+}
+
+gprsLocationInfoRetrievalContract-v3 CONTRACT ::= {
+    -- Responder is HLR if Initiator is GGSN
+    INITIATOR CONSUMER OF {
+    gprsInterrogationPackage-v3}
+}
+
+gprsLocationInfoRetrievalContract-v4 CONTRACT ::= {
+    -- Responder is HLR if Initiator is GGSN
+    INITIATOR CONSUMER OF {
+    gprsInterrogationPackage-v4}
+}
+
+failureReportContract-v3 CONTRACT ::= {
+    -- Responder is HLR if Initiator is GGSN
+    INITIATOR CONSUMER OF {
+    failureReportingPackage-v3}
+}
+
+gprsNotifyContract-v3 CONTRACT ::= {
+    -- Responder is GGSN if Initiator is HLR
+    INITIATOR CONSUMER OF {
+    gprsNotifyingPackage-v3}
+}
+
+ss-InvocationNotificationContract-v3 CONTRACT ::= {
+    -- Responder is gsmSCF, Initiator is MSC
+    -- Responder is gsmSCF, Initiator is HLR
+    INITIATOR CONSUMER OF {
+    ss-InvocationNotificationPackage-v3}
+}
+
+reportingContract-v3 CONTRACT ::= {
+    -- Responder is VLR if Initiator is HLR
+    -- Responder is HLR if Initiator is VLR
+    INITIATOR CONSUMER OF {
+    setReportingStatePackage-v3 |
+    statusReportPackage-v3 |
+    remoteUserFreePackage-v3}
+    RESPONDER CONSUMER OF {
+    setReportingStatePackage-v3 |
+    statusReportPackage-v3}
+}
+
+callCompletionContract-v3 CONTRACT ::= {
+    -- Responder is HLR if Initiator is VLR
+    INITIATOR CONSUMER OF {
+    callCompletionPackage-v3}
+}
+
+locationSvcGatewayContract-v3 CONTRACT ::= {
+    -- Responder is HLR if Initiator is GMLC
+    INITIATOR CONSUMER OF {
+    locationSvcGatewayPackage-v3}
+}
+
+locationSvcEnquiryContract-v3 CONTRACT ::= {
+    -- Responder is MSC or SGSN if Initiator is GMLC
+    -- Responder is GMLC if Initiator is MSC
+    -- Responder is GMLC if Initiator is SGSN
+    INITIATOR CONSUMER OF {
+    locationSvcEnquiryPackage-v3 |
+    locationSvcReportingPackage-v3}
+}
+
+istAlertingContract-v3 CONTRACT ::= {
+    -- Responder is HLR if Initiator is VMSC
+    -- Responder is HLR if Initiator is GMSC
+    INITIATOR CONSUMER OF {
+    ist-AlertingPackage-v3}
+}
+
+serviceTerminationContract-v3 CONTRACT ::= {
+    -- Responder is VMSC or GMSC if Initiator is HLR
+    INITIATOR CONSUMER OF {
+    serviceTerminationPackage-v3}
+}
+
+mm-EventReportingContract-v3 CONTRACT ::= {
+    -- Responder is gsmSCF, Initiator is VLR
+    INITIATOR CONSUMER OF {
+    mm-EventReportingPackage-v3}
+}
+
+anyTimeInfohandlingContract-v3 CONTRACT ::= {
+    -- Responder is HLR if Initiator is gsmSCF
+    INITIATOR CONSUMER OF {
+    anyTimeInformationHandlingPackage-v3}
+}
+
+subscriberDataModificationNotificationContract-v3 CONTRACT ::= {
+    -- Responder is gsmSCF, Initiator is HLR
+    INITIATOR CONSUMER OF {
+    subscriberDataModificationNotificationPackage-v3}
+}
+
+authenticationFailureReportContract-v3 CONTRACT ::= {
+    -- Responder is HLR if Initiator is VLR
+    -- Responder is HLR if Initiator is SGSN
+    INITIATOR CONSUMER OF {
+    authenticationFailureReportPackage-v3 }
+}
+
+resourceManagementContract-v3 CONTRACT ::= {
+    -- Responder is VMSC if Initiator is GMSC
+    INITIATOR CONSUMER OF {
+    resourceManagementPackage-v3 }
+}
+
+shortMsgMT-Relay-VGCS-Contract-v3 CONTRACT ::= {
+    -- Responder is MSC if Initiator is SMS-GMSC
+    INITIATOR CONSUMER OF {
+    mt-ShortMsgRelay-VGCS-Package-v3}
+}
+
+vcsgLocationUpdateContract-v3 CONTRACT ::= {
+    -- Responder is CSS if Initiator is VLR or SGSN
+    INITIATOR CONSUMER OF {
+    vcsgLocationUpdatingPackage-v3}
+    RESPONDER CONSUMER OF {
+    subscriberDataMngtPackage-v3}
+}
+
+vcsgLocationCancellationContract-v3 CONTRACT ::= {
+    -- Responder is VLR or SGSN if Initiator is CSS
+    INITIATOR CONSUMER OF {
+    vcsgLocationCancellationPackage-v3}
+}
+
+sIWFSAllocationContract-v3 CONTRACT ::= {
+    -- Responder is SIWF if Initiater is VMSC
+   INITIATOR CONSUMER OF {
+   provideSIWFSNumberPackage-v3| sIWFSSignallingModifyPackage-v3}
+}
+END

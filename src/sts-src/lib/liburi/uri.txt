@@ -1,0 +1,6 @@
+http://localhost/ussd/mo.php
+http://127.0.0.1/ussd/mo.php?hello=there
+http://127.0.0.1:9999/ussd/mo.php?hello=there
+http://localhost:8888/ussd/mo.php
+http://127.0.0.1:9999/ussd/mo.php?hello=there is a boy
+http://127.0.0.1:9999/ussd/mo.php?hello=there%20is%20a%20boy&my=name%20is%ayub
